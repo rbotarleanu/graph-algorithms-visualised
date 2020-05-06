@@ -1,0 +1,12 @@
+
+.Toolbar {
+    /* background-color: lightblue; */
+    height: 15%;
+    width: 100%;
+}  
+
+.Toolbar div {
+    float: left;
+    clear: none;
+    padding: 0px 2px 0px 2px;
+}
