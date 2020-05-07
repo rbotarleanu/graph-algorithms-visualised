@@ -1,0 +1,11 @@
+.SliderParentDiv div {
+    float: left;
+    padding: 0px 1px 0px 5px;
+}
+
+.SliderChildDiv {
+}
+
+.LabelChildDiv {
+    margin-top: 8%;
+}

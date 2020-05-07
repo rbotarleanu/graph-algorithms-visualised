@@ -1,0 +1,7 @@
+.Graph {
+    height: 90vw;
+}
+.Graph svg {
+    height: 100%;
+    width: 100%;
+}
