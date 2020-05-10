@@ -1,13 +1,11 @@
 import React from 'react';
 import '../styles/App.css';
-import Toolbar from './Toolbar.js';
-import Graph from './Graph.js';
+import GraphVisualizer from './GraphVisualizer.js';
 
 function App() {
   return (
     <div className="App">
-        <Toolbar className="toolbar"/>
-        <Graph />
+        <GraphVisualizer className="toolbar"/>
     </div>
   );
 }

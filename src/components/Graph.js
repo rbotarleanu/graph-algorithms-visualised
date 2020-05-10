@@ -7,37 +7,63 @@ export default class Graph extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            nodes: {
-                "node1": {
-                    id: "node1",
-                    posX: 500,
-                    posY: 150,
-                    radius: 50
-                },
-                "node2": {
-                    id: "node2",
-                    posX: 200,
-                    posY: 50,
-                    radius: 50
-                }
-            },
-            edges: {
-                "edge1": {
-                    node1: "node1",
-                    node2: "node2",
-                    width: 1
-                }
-            },
-            nodeIncidentEdges: {
-                "node1":  {  
-                    "edgeId": "edge1"
-                },
-                "node2": {
-                    "edgeId": "edge1"
-                }
-            }
+        var nodes = props.nodes;
+        var edges = props.edges;
+        var radius = props.nodeRadius;
+        this.state = {nodes: {}, edges: {}, nodeIncidentEdges: {}};
+        for (var i = 0; i < nodes.length; ++i) {
+            var nodeId = "node-" + i;
+            this.state.nodes[nodeId] = {
+                "id": nodeId,
+                "posX": nodes[i].x,
+                "posY": nodes[i].y,
+                radius: radius
+            };
         }
+        for (var i = 0; i < edges.length; ++i) {
+            var edgeId = "edge-" + i;
+            var node1 = "node-" + edges[i].u;
+            var node2 =  "node-" + edges[i].v;
+            this.state.edges[edgeId] = {
+                "node1":  node1,
+                "node2":  node2,
+                width: 1
+            };
+
+            this.state.nodeIncidentEdges[node1] = edgeId;
+            this.state.nodeIncidentEdges[node2] = edgeId;
+        }
+        // this.state = {
+        //     nodes: {
+        //         "node1": {
+        //             id: "node1",
+        //             posX: 900,
+        //             posY: 600,
+        //             radius: 10
+        //         },
+        //         "node2": {
+        //             id: "node2",
+        //             posX: 200,
+        //             posY: 50,
+        //             radius: 10
+        //         }
+        //     },
+        //     edges: {
+        //         "edge1": {
+        //             node1: "node1",
+        //             node2: "node2",
+        //             width: 1
+        //         }
+        //     },
+        //     nodeIncidentEdges: {
+        //         "node1":  {  
+        //             "edgeId": "edge1"
+        //         },
+        //         "node2": {
+        //             "edgeId": "edge1"
+        //         }
+        //     }
+        // }
 
         this.edgeRefs = {};
         this.nodeChangePosition = this.nodeChangePosition.bind(this);
