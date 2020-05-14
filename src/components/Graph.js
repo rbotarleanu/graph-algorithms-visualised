@@ -29,9 +29,6 @@ export default class Graph extends Component {
                 "node2":  node2,
                 width: 1
             };
-
-            this.state.nodeIncidentEdges[node1] = edgeId;
-            this.state.nodeIncidentEdges[node2] = edgeId;
         }
         // this.state = {
         //     nodes: {
@@ -70,14 +67,19 @@ export default class Graph extends Component {
     }
 
     nodeChangePosition(nodeId, nodePosX, nodePosY) {
-        var edgeId = this.state.nodeIncidentEdges[nodeId].edgeId;
-        var edge = this.state.edges[edgeId];
+        for (var edgeId in this.state.edges) {
+            var edge = this.state.edges[edgeId];
+            if (edge.node1 !== nodeId && edge.node2 !== nodeId) {
+                continue;
+            }
 
-        this.edgeRefs[edgeId].handleNodePositionChange(
-            nodeId === edge.node1 ? 0: 1,
-            nodePosX,
-            nodePosY
-        );
+            this.edgeRefs[edgeId].handleNodePositionChange(
+                nodeId === edge.node1 ? 0: 1,
+                nodePosX,
+                nodePosY
+            );
+                
+        }
     }
 
     render() {
