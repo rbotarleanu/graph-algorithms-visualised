@@ -12,7 +12,7 @@ export default class Graph extends Component {
         var radius = props.nodeRadius;
         this.state = {nodes: {}, edges: {}, nodeIncidentEdges: {}};
         for (var i = 0; i < nodes.length; ++i) {
-            var nodeId = "node-" + i;
+            var nodeId = i.toString();
             this.state.nodes[nodeId] = {
                 "id": nodeId,
                 "posX": nodes[i].x,
@@ -21,9 +21,9 @@ export default class Graph extends Component {
             };
         }
         for (i = 0; i < edges.length; ++i) {
-            var edgeId = "edge-" + i;
-            var node1 = "node-" + edges[i].u;
-            var node2 =  "node-" + edges[i].v;
+            var edgeId = i.toString();
+            var node1 = edges[i].u.toString();
+            var node2 = edges[i].v.toString();
             this.state.edges[edgeId] = {
                 "node1":  node1,
                 "node2":  node2,

@@ -19,14 +19,15 @@ export default class Node extends Component {
             posY: props.posY,
             radius: props.radius,
             draggableX: props.posX,
-            draggableY: props.posY
+            draggableY: props.posY,
+            value: props.value
         }
     }
 
     dragMove(e) {
         this.setState({
             draggableX: this.state.draggableX + e.movementX,
-            draggableY: this.state.draggableY + e.movementY,
+            draggableY: this.state.draggableY + e.movementY
         });
 
         e.stopPropagation();
@@ -38,6 +39,7 @@ export default class Node extends Component {
 
     render() {
         return (
+            <svg>
             <Draggable 
                 nodeRef={this.nodeRef}
                 onDrag={e => this.dragMove(e)}
@@ -50,6 +52,14 @@ export default class Node extends Component {
                 fill="red"
                 />
             </Draggable>
+            <text
+                x={this.state.draggableX - this.state.radius / 2 + 1}
+                y={this.state.draggableY - this.state.radius - 2}
+                style={{font: "15px serif", zIndex: -1}}
+            >
+                {this.nodeId}
+            </text>
+            </svg>
         )
     }
 }
