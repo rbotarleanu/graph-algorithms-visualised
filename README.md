@@ -2,10 +2,10 @@
 - using react bootstrap
 - ~react bootstrap slider~
 - react bootstrap range slider
+- react-draggable to make the nodes move nicely; without this the performance is poor and dragging can be missed if cursor moves too fast
 
 # TODO
 - generate the positions using a spring layout
-- take these positions and populates a graph on screen
 - make edges be able to be directed (node1 -> node2)
 - add collision detection for nodes (make the node not being dragged bounce)
 - be able to select a source node

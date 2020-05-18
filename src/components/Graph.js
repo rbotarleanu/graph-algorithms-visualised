@@ -20,7 +20,7 @@ export default class Graph extends Component {
                 radius: radius
             };
         }
-        for (var i = 0; i < edges.length; ++i) {
+        for (i = 0; i < edges.length; ++i) {
             var edgeId = "edge-" + i;
             var node1 = "node-" + edges[i].u;
             var node2 =  "node-" + edges[i].v;

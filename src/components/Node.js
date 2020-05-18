@@ -24,8 +24,6 @@ export default class Node extends Component {
     }
 
     dragMove(e) {
-        console.log(e);
-
         this.setState({
             draggableX: this.state.draggableX + e.movementX,
             draggableY: this.state.draggableY + e.movementY,
