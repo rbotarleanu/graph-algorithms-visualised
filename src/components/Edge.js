@@ -16,7 +16,8 @@ export default class Edge extends Component {
             y2: props.y2,
             weight: props.weight,
             textX: textPos.x,
-            textY: textPos.y - 2
+            textY: textPos.y - 2,
+            directed: props.directed
         };
     }
 
@@ -51,14 +52,64 @@ export default class Edge extends Component {
     render() {
         return (
             <svg>
+            <defs>
+                {this.state.directed &&
+                    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style={{
+                            stopColor: "rgb(245, 252, 255)",
+                            stopOpacity: "1"
+                        }} />
+                        <stop offset="100%" style={{
+                            stopColor: "rgb(0, 0, 255)",
+                            stopOpacity: "1"
+                        }} />
+                    </linearGradient>
+                }
+                {this.state.directed &&
+                    <linearGradient id="gradInv" x1="100%" y1="0%" x2="0%" y2="0%">
+                        <stop offset="0%" style={{
+                            stopColor: "rgb(245, 252, 255)",
+                            stopOpacity: "1"
+                        }} />
+                        <stop offset="100%" style={{
+                            stopColor: "rgb(0, 0, 255)",
+                            stopOpacity: "1"
+                        }} />
+                    </linearGradient>
+                }
+                {!this.state.directed &&
+                    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style={{
+                            stopColor: "rgb(0,0,255)",
+                            stopOpacity: "1"
+                        }} />
+                        <stop offset="100%" style={{
+                            stopColor: "rgb(0,0,255)",
+                            stopOpacity: "1"
+                        }} />
+                    </linearGradient>
+                }
+                {!this.state.directed &&
+                    <linearGradient id="gradInv" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style={{
+                            stopColor: "rgb(0,0,255)",
+                            stopOpacity: "1"
+                        }} />
+                        <stop offset="100%" style={{
+                            stopColor: "rgb(0,0,255)",
+                            stopOpacity: "1"
+                        }} />
+                    </linearGradient>
+                }
+            </defs>
             <line
                 className="Line"
                 x1={this.state.x1}
-                y1={this.state.y1}
                 x2={this.state.x2}
+                y1={this.state.y1}
                 y2={this.state.y2}
-                style={
-                    {"strokeWidth": this.state.width}}
+                style={{"strokeWidth": this.state.width}}
+                stroke={this.state.x1 < this.state.x2 ? "url(#grad)" : "url(#gradInv"}
             />
             <text
                 x={this.state.textX}

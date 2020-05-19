@@ -10,6 +10,7 @@ export default class Graph extends Component {
         var nodes = props.nodes;
         var edges = props.edges;
         var radius = props.nodeRadius;
+
         this.state = {nodes: {}, edges: {}, nodeIncidentEdges: {}};
         for (var i = 0; i < nodes.length; ++i) {
             var nodeId = i.toString();
@@ -78,7 +79,7 @@ export default class Graph extends Component {
                 nodePosX,
                 nodePosY
             );
-                
+            
         }
     }
 
@@ -97,6 +98,7 @@ export default class Graph extends Component {
                                     x2={this.state.nodes[this.state.edges[edgeId].node2].posX}
                                     y2={this.state.nodes[this.state.edges[edgeId].node2].posY}
                                     ref={(ref) => this.edgeRefs[edgeId]=ref}
+                                    directed={true}
                                 />
                             )
                         })
