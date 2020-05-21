@@ -37,6 +37,18 @@ export default class Node extends Component {
             this.nodeId, this.state.draggableX, this.state.draggableY);
     }
 
+    updatePosition(newPos) {
+        this.setState({
+            draggableX: newPos.x,
+            draggableY: newPos.y,
+            posX: newPos.x,
+            posY: newPos.y
+        });
+
+        this.changePositionNotification(
+            this.nodeId, newPos.x, newPos.y);
+    }
+
     render() {
         return (
             <svg>

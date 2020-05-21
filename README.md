@@ -6,11 +6,9 @@
 
 # TODO
 - generate the positions using a spring layout
-- make edges be able to be directed (node1 -> node2)
-- add collision detection for nodes (make the node not being dragged bounce)
 - be able to select a source node
 - run dfs (change colors as it goes)
-
+- add a legend showing what the edge gradient means etc.
 
 # Algorithms
 

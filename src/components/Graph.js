@@ -64,6 +64,7 @@ export default class Graph extends Component {
         // }
 
         this.edgeRefs = {};
+        this.nodeRefs = {};
         this.nodeChangePosition = this.nodeChangePosition.bind(this);
     }
 
@@ -79,8 +80,18 @@ export default class Graph extends Component {
                 nodePosX,
                 nodePosY
             );
-            
         }
+    }
+
+    updateGraphState(nodeUpdates, edgeUpdates) {
+        nodeUpdates.map(nodeUpdate => {
+            var nodeId = nodeUpdate.nodeId;
+            var nodePos = {
+                x: nodeUpdate.x,
+                y: nodeUpdate.y
+            };
+            this.nodeRefs[nodeId].updatePosition(nodePos);
+        });
     }
 
     render() {
@@ -114,6 +125,7 @@ export default class Graph extends Component {
                                     radius={this.state.nodes[nodeId].radius}
                                     fill="red"
                                     changePositionNotification={this.nodeChangePosition}
+                                    ref={(ref) => this.nodeRefs[nodeId]=ref}
                                 />
                             )
                         })
