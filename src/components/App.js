@@ -5,7 +5,13 @@ import GraphVisualizer from './GraphVisualizer.js';
 function App() {
   return (
     <div className="App">
-        <GraphVisualizer className="toolbar"/>
+        <GraphVisualizer
+          className="toolbar"
+          graphDrawX={30}
+          graphDrawY={20}
+          graphDrawHeight={600}
+          graphDrawWidth={800}
+        />
     </div>
   );
 }

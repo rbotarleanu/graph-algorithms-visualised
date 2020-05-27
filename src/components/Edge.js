@@ -17,7 +17,9 @@ export default class Edge extends Component {
             weight: props.weight,
             textX: textPos.x,
             textY: textPos.y - 2,
-            directed: props.directed
+            directed: props.directed,
+            node1: props.node1,
+            node2: props.node2
         };
     }
 

@@ -91,6 +91,7 @@ export default class Graph extends Component {
                 y: nodeUpdate.y
             };
             this.nodeRefs[nodeId].updatePosition(nodePos);
+            return null;
         });
     }
 
@@ -108,6 +109,8 @@ export default class Graph extends Component {
                                     y1={this.state.nodes[this.state.edges[edgeId].node1].posY}
                                     x2={this.state.nodes[this.state.edges[edgeId].node2].posX}
                                     y2={this.state.nodes[this.state.edges[edgeId].node2].posY}
+                                    node1={this.state.edges[edgeId].node1}
+                                    node2={this.state.edges[edgeId].node2}
                                     ref={(ref) => this.edgeRefs[edgeId]=ref}
                                     directed={true}
                                 />
