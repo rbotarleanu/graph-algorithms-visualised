@@ -1,5 +1,15 @@
 .App {
   text-align: center;
+  height: 100%;
+  overflow: hidden; /* Hide scrollbars */
+}
+
+#root {
+  height: 100%;
+}
+
+html, body {
+  height: 100%
 }
 
 /* 

@@ -125,8 +125,8 @@ export default class GraphVisualizer extends Component {
     }
 
     componentDidMount() {
-        const height = document.getElementById('graph').clientHeight;
-        const width = document.getElementById('graph').clientWidth;
+        const height = document.getElementById('visualizer').clientHeight * 0.9;
+        const width = document.getElementById('visualizer').clientWidth * 0.9;
         this.renderGraph(height, width);
     }
 
