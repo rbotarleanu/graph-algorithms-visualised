@@ -8,6 +8,7 @@ export default class Slider extends Component {
     constructor(props) {
         super(props);
         this.label = props.label;
+        this.notifyGraphRedraw = props.notifyGraphRedraw;
 
         if (props.isPerc) {
             this.labelHandler = this.tooltipLabelPerc;
@@ -37,6 +38,8 @@ export default class Slider extends Component {
                 currentValue: newSliderValue
             }
         });
+
+        this.notifyGraphRedraw(this.label, newSliderValue);
     }
 
     render() {

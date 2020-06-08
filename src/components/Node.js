@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import '../styles/Node.css';
 import Draggable from 'react-draggable';
 
-
-
-
 export default class Node extends Component {
 
     constructor(props) {
@@ -15,38 +12,53 @@ export default class Node extends Component {
         this.nodeRef = React.createRef();
 
         this.state = {
-            posX: props.posX,
-            posY: props.posY,
+            nodePosition: {
+                x: props.posX,
+                y: props.posY
+            },
+            x: props.posX,
+            y: props.posY,
             radius: props.radius,
-            draggableX: props.posX,
-            draggableY: props.posY,
             value: props.value
         }
     }
 
-    dragMove(e) {
-        this.setState({
-            draggableX: this.state.draggableX + e.movementX,
-            draggableY: this.state.draggableY + e.movementY
-        });
+    dragMove(e, ui) {
+        const newPosX = this.state.nodePosition.x + ui.deltaX;
+        const newPosY = this.state.nodePosition.y + ui.deltaY;
+        this.setState({nodePosition: {x: newPosX, y: newPosY}});
 
         e.stopPropagation();
         e.preventDefault();
 
         this.changePositionNotification(
-            this.nodeId, this.state.draggableX, this.state.draggableY);
+            this.nodeId, newPosX, newPosY);
+    }
+
+    getX() {
+        return this.state.nodePosition.x;
+    }
+
+    getY() {
+        return this.state.nodePosition.y;
+    }
+
+    getId() {
+        return this.state.nodeId;
     }
 
     updatePosition(newPos) {
-        this.setState({
-            draggableX: newPos.x,
-            draggableY: newPos.y,
-            posX: newPos.x,
-            posY: newPos.y
-        });
+        this.setState({nodePosition: {x: newPos.x, y: newPos.y}});
 
         this.changePositionNotification(
             this.nodeId, newPos.x, newPos.y);
+    }
+
+    finalizeDragMovement(e) {
+        // this.setState({
+        //     initX: this.this.state.posX,
+        //     initY: this.state.posY
+        // });
     }
 
     render() {
@@ -54,23 +66,25 @@ export default class Node extends Component {
             <svg>
             <Draggable 
                 nodeRef={this.nodeRef}
-                onDrag={e => this.dragMove(e)}
-                >
-            <circle
-                cx={this.state.posX}
-                cy={this.state.posY}
-                ref={this.nodeRef}
-                r={this.state.radius}
-                fill="red"
+                position={this.state.nodePosition}
+                onDrag={(e, ui) => this.dragMove(e, ui)}
+                onStop={e => this.finalizeDragMovement(e)}
+            >
+                <circle
+                    cx={0}
+                    cy={0}
+                    ref={this.nodeRef}
+                    r={this.state.radius}
+                    fill="red"
                 />
             </Draggable>
-            <text
-                x={this.state.draggableX - this.state.radius / 2 + 1}
-                y={this.state.draggableY - this.state.radius - 2}
-                style={{font: "15px serif", zIndex: -1}}
-            >
-                {this.nodeId}
-            </text>
+                <text
+                    x={this.state.nodePosition.x - this.state.radius / 2 + 1}
+                    y={this.state.nodePosition.y - this.state.radius - 2}
+                    style={{font: "15px serif", zIndex: -1}}
+                >
+                    {this.nodeId}
+                </text>
             </svg>
         )
     }

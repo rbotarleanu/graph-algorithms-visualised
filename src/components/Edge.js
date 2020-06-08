@@ -30,6 +30,14 @@ export default class Edge extends Component {
         }
     }
 
+    getNode1() {
+        return this.state.node1;
+    }
+
+    getNode2() {
+        return this.state.node2;
+    }
+
     handleNodePositionChange(nodeIdx, x, y) {
         if (nodeIdx === 0) {
             this.setState({

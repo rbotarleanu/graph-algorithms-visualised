@@ -9,8 +9,6 @@ function App() {
           className="toolbar"
           graphDrawX={30}
           graphDrawY={20}
-          graphDrawHeight={600}
-          graphDrawWidth={800}
         />
     </div>
   );

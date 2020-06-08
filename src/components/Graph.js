@@ -6,69 +6,60 @@ import '../styles/Graph.css';
 export default class Graph extends Component {
     constructor(props) {
         super(props);
-
-        var nodes = props.nodes;
-        var edges = props.edges;
-        var radius = props.nodeRadius;
+        this.radius = props.nodeRadius;
+        this.nodes = props.nodes;
+        this.edges = props.edges;
 
         this.state = {nodes: {}, edges: {}, nodeIncidentEdges: {}};
-        for (var i = 0; i < nodes.length; ++i) {
+        this.setGraphElements(this.state);
+
+        this.edgeRefs = {};
+        this.nodeRefs = {};
+        this.nodeChangePosition = this.nodeChangePosition.bind(this);
+        this.remake = this.remake.bind(this);
+    }
+
+    setGraphElements(state) {
+        for (var i = 0; i < this.nodes.length; ++i) {
             var nodeId = i.toString();
-            this.state.nodes[nodeId] = {
+            state.nodes[nodeId] = {
                 "id": nodeId,
-                "posX": nodes[i].x,
-                "posY": nodes[i].y,
-                radius: radius
+                "posX": this.nodes[i].x,
+                "posY": this.nodes[i].y,
+                radius: this.radius
             };
         }
-        for (i = 0; i < edges.length; ++i) {
+        for (i = 0; i < this.edges.length; ++i) {
             var edgeId = i.toString();
-            var node1 = edges[i].u.toString();
-            var node2 = edges[i].v.toString();
-            this.state.edges[edgeId] = {
+            var node1 = this.edges[i].u.toString();
+            var node2 = this.edges[i].v.toString();
+            state.edges[edgeId] = {
                 "node1":  node1,
                 "node2":  node2,
                 width: 1
             };
         }
-        // this.state = {
-        //     nodes: {
-        //         "node1": {
-        //             id: "node1",
-        //             posX: 900,
-        //             posY: 600,
-        //             radius: 10
-        //         },
-        //         "node2": {
-        //             id: "node2",
-        //             posX: 200,
-        //             posY: 50,
-        //             radius: 10
-        //         }
-        //     },
-        //     edges: {
-        //         "edge1": {
-        //             node1: "node1",
-        //             node2: "node2",
-        //             width: 1
-        //         }
-        //     },
-        //     nodeIncidentEdges: {
-        //         "node1":  {  
-        //             "edgeId": "edge1"
-        //         },
-        //         "node2": {
-        //             "edgeId": "edge1"
-        //         }
-        //     }
-        // }
+    }
 
+    remake(graph) {
+        var newState = this.state;
+        this.nodes = graph.nodes;
+        this.edges = graph.edges;
+
+        newState.nodes = {};
+        newState.edges = {};
+        newState.nodeIncidentEdges = {};
         this.edgeRefs = {};
         this.nodeRefs = {};
-        this.nodeChangePosition = this.nodeChangePosition.bind(this);
+
+        this.setGraphElements(newState);
+        this.setState(newState);
     }
 
     nodeChangePosition(nodeId, nodePosX, nodePosY) {
+        var stateNodes = this.state.nodes;
+        stateNodes[nodeId].posX = nodePosX;
+        stateNodes[nodeId].posY = nodePosY;
         for (var edgeId in this.state.edges) {
             var edge = this.state.edges[edgeId];
             if (edge.node1 !== nodeId && edge.node2 !== nodeId) {
@@ -81,6 +72,8 @@ export default class Graph extends Component {
                 nodePosY
             );
         }
+
+        this.setState({nodes: stateNodes});
     }
 
     updateGraphState(nodeUpdates, edgeUpdates) {
