@@ -19,11 +19,12 @@ export default class Edge extends Component {
             x2: props.x2,
             y2: props.y2,
             weight: props.weight,
-            textX: textPos.x,
+            textX: textPos.x + 2,
             textY: textPos.y - 2,
             directed: props.directed,
             node1: props.node1,
-            node2: props.node2
+            node2: props.node2,
+            nodeRadius: props.nodeRadius
         };
     }
 
@@ -69,8 +70,17 @@ export default class Edge extends Component {
 
     render() {
         return (
+
             <svg>
             <defs>
+                <marker id="markerArrow"
+                    markerWidth={this.state.nodeRadius}
+                    markerHeight={this.state.nodeRadius}
+                    refX={this.state.nodeRadius + 5}
+                    refY={this.state.nodeRadius / 2}
+                    orient="auto">
+                    <path d="M0,0 L0,10 L6,5 L0,0" />
+                </marker>
                 {this.state.directed &&
                     <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" style={{
@@ -126,9 +136,10 @@ export default class Edge extends Component {
                 x2={this.state.x2}
                 y1={this.state.y1}
                 y2={this.state.y2}
-                style={{"strokeWidth": this.state.width}}
+                style={{"strokeWidth": this.state.width, markerEnd: "url(#markerArrow)"}}
                 stroke={this.state.x1 < this.state.x2 ? "url(#grad)" : "url(#gradInv"}
             />
+            
             <text
                 x={this.state.textX}
                 y={this.state.textY}
