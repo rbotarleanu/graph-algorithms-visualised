@@ -165,7 +165,6 @@ export class FruchtermanReingoldFD {
     repulsion(v1, v2, numNodes) {
         var d = v1.distance(v2);
         var r = -Math.pow(this.optimalDistance(numNodes), 2) / d.l2norm();
-
         return d.normalize().scalarMul(r / this.scale);
     }
 
@@ -178,7 +177,6 @@ export class FruchtermanReingoldFD {
                 if (nodeForces[v] === undefined) {
                     nodeForces[v] = new Vector2D(0, 0);
                 }
-
                 var repulsionVector = this.repulsion(
                     nodes[u], nodes[v], nodes.length);
                 nodeForces[u] = nodeForces[u].add(repulsionVector);
@@ -235,7 +233,7 @@ export class FruchtermanReingoldFD {
             var nodeX = nodes[nodeIdx].getX();
             var nodeY = nodes[nodeIdx].getY();
 
-            nodeIds.push(nodePositions.length);
+            nodeIds.push(nodeId);
             var nodePosition = new Vector2D(nodeX, nodeY);
             nodePositions.push(nodePosition);
         }
@@ -243,14 +241,13 @@ export class FruchtermanReingoldFD {
         for (var edgeId in edges) {
             var edgeNode1 = edges[edgeId].getNode1();
             var edgeNode2 = edges[edgeId].getNode2();
-
             edgeList.push(new Edge(edgeNode1, edgeNode2));
         }
-
         var nodeForces = {};
         this.addRepulsionForces(nodeForces, nodePositions);
         this.addAttractionForces(nodeForces, nodePositions, edgeList);
         this.computeNewPositions(nodeForces, nodePositions);
+        
         this.cool();
         var nodeUpdates = [];
         var edgeUpdates = [];

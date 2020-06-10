@@ -31,36 +31,40 @@ export default class GraphVisualizer extends Component {
             nodeRadius: 10,
             numNodes: 10,
             animationSpeed: 100
-        }
+        };
 
         this.graphRef = null;
         this.runAlgorithm = this.runAlgorithm.bind(this);
-        this.generateGraph = this.generateGraph.bind(this);
         this.sliderUpdate = this.sliderUpdate.bind(this);
+        this.handleRunButton = this.handleRunButton.bind(this);
+        this.handleGenerateGraphButton = this.handleGenerateGraphButton.bind(this);
     }
 
     renderGraph(height, width) {
-        this.graphDrawX = this.props.graphDrawX;
-        this.graphDrawY = this.props.graphDrawY;
-        this.graphWidth = width - this.state.nodeRadius * 2 - this.graphDrawX;
-        this.graphHeight = height - this.state.nodeRadius * 2 - this.graphDrawY;
+        const graphDrawX = this.props.graphDrawX;
+        const graphDrawY = this.props.graphDrawY;
+        const graphWidth = width - this.state.nodeRadius * 2 - graphDrawX;
+        const graphHeight = height - this.state.nodeRadius * 2 - graphDrawY;
 
-        var graph = this.makeGraph(10, 0.1);
+        var graph = this.makeGraph(10, 0.1, graphWidth, graphHeight,
+            graphDrawX, graphDrawY);
         this.setState({
             renderGraph: true,
             nodes: graph.nodes,
             edges: graph.edges,
-            width: this.graphWidth,
-            height: this.graphHeight,
+            graphWidth: graphWidth,
+            graphHeight: graphHeight,
+            graphDrawX: graphDrawX,
+            graphDrawY: graphDrawY
         });
     }
 
-    makeGraph(numNodes, sparsity) {
+    makeGraph(numNodes, sparsity, width, height, startX, startY) {
         var alg = new RandomLayout(
-            this.graphDrawX,
-            this.graphDrawY,
-            this.graphWidth,
-            this.graphHeight,
+            startX,
+            startY,
+            width,
+            height,
             numNodes,
             sparsity
         );
@@ -68,10 +72,26 @@ export default class GraphVisualizer extends Component {
         return alg.step();
     }
 
+    handleGenerateGraphButton() {
+        var graph = this.makeGraph(
+            this.state.nodeSliderProps.currentValue,
+            this.state.sparsitySliderProps.currentValue / 100,
+            this.state.graphWidth,
+            this.state.graphHeight,
+            this.state.graphDrawX,
+            this.state.graphDrawY);
+        this.setState({
+            nodes: graph.nodes,
+            edges: graph.edges,
+            numNodes: graph.nodes.length
+        });
+        this.graphRef.remake(graph);
+    }
+
     runAlgorithm(algorithm) {
         var graph = this.graphRef;
-        var nodes = graph.nodeRefs;
-        var edges = graph.edgeRefs;
+        var nodes = graph.getNodeRefs();
+        var edges = graph.getEdgeRefs();
 
         var updates = algorithm.step(nodes, edges);
         if (updates === null) {
@@ -86,13 +106,13 @@ export default class GraphVisualizer extends Component {
         });
     }
 
-    generateGraph() {
+    handleRunButton() {
         // var algorithm = new RandomMovement(50);
         var algorithm = new FruchtermanReingoldFD(
-            this.props.graphDrawX + this.state.nodeRadius * 2,
-            this.props.graphDrawY + this.state.nodeRadius,
-            this.state.width,
-            this.state.height,
+            this.state.graphDrawX + this.state.nodeRadius * 2,
+            this.state.graphDrawY + this.state.nodeRadius,
+            this.state.graphWidth,
+            this.state.graphHeight,
             50, 0.001);
         this.runAlgorithm(algorithm);
     }
@@ -110,18 +130,10 @@ export default class GraphVisualizer extends Component {
             default:
                 return;
         }
-        var graph = this.makeGraph(
-            nodeSliderProps.currentValue,
-            sparsitySliderProps.currentValue / 100);
         this.setState({
-            nodes: graph.nodes,
-            edges: graph.edges,
             nodeSliderProps: nodeSliderProps,
-            sparsitySliderProps: sparsitySliderProps,
-            numNodes: graph.nodes.length
+            sparsitySliderProps: sparsitySliderProps
         });
-
-        this.graphRef.remake(graph);
     }
 
     componentDidMount() {
@@ -147,8 +159,12 @@ export default class GraphVisualizer extends Component {
                     />
                     <Button
                         variant="primary"
-                        onClick={this.generateGraph}
-                    >Generate graph</Button>{' '}
+                        onClick={this.handleGenerateGraphButton}
+                    >Generate graph!</Button>
+                    <Button
+                        variant="primary"
+                        onClick={this.handleRunButton}
+                    >Run!</Button>
                 </div>
                 <div className="Graph" id="graph">
                     {this.state.renderGraph && 

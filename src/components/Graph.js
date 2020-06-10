@@ -7,32 +7,32 @@ export default class Graph extends Component {
     constructor(props) {
         super(props);
         this.radius = props.nodeRadius;
-        this.nodes = props.nodes;
-        this.edges = props.edges;
 
-        this.state = {nodes: {}, edges: {}, nodeIncidentEdges: {}};
-        this.setGraphElements(this.state);
+        this.state = {nodes: {}, edges: {},
+                      nodeIncidentEdges: {}};
+        this.setGraphElements(this.state, props.nodes, props.edges);
 
         this.edgeRefs = {};
         this.nodeRefs = {};
+
         this.nodeChangePosition = this.nodeChangePosition.bind(this);
         this.remake = this.remake.bind(this);
     }
 
-    setGraphElements(state) {
-        for (var i = 0; i < this.nodes.length; ++i) {
+    setGraphElements(state, nodes, edges) {
+        for (var i = 0; i < nodes.length; ++i) {
             var nodeId = i.toString();
             state.nodes[nodeId] = {
                 "id": nodeId,
-                "posX": this.nodes[i].x,
-                "posY": this.nodes[i].y,
+                "posX": nodes[i].x,
+                "posY": nodes[i].y,
                 radius: this.radius
             };
         }
-        for (i = 0; i < this.edges.length; ++i) {
+        for (i = 0; i < edges.length; ++i) {
             var edgeId = i.toString();
-            var node1 = this.edges[i].u.toString();
-            var node2 = this.edges[i].v.toString();
+            var node1 = edges[i].u.toString();
+            var node2 = edges[i].v.toString();
             state.edges[edgeId] = {
                 "node1":  node1,
                 "node2":  node2,
@@ -43,17 +43,36 @@ export default class Graph extends Component {
 
     remake(graph) {
         var newState = this.state;
-        this.nodes = graph.nodes;
-        this.edges = graph.edges;
+        const nodes = graph.nodes;
+        const edges = graph.edges;
 
         newState.nodes = {};
         newState.edges = {};
         newState.nodeIncidentEdges = {};
-        this.edgeRefs = {};
-        this.nodeRefs = {};
+        newState.nodeRefs = {};
+        newState.edgeRefs = {};
 
-        this.setGraphElements(newState);
+        this.setGraphElements(newState, nodes, edges);
         this.setState(newState);
+        requestAnimationFrame(() => {
+            var filteredNodeRefs = {};
+            for (var nodeRef in this.nodeRefs) {
+                if (this.nodeRefs[nodeRef] === null) {
+                    continue;
+                }
+                filteredNodeRefs[nodeRef] = this.nodeRefs[nodeRef];
+            }
+            this.nodeRefs = filteredNodeRefs;
+
+            var filteredEdgeRefs = {};
+            for (var edgeRef in this.edgeRefs) {
+                if (this.edgeRefs[edgeRef] === null) {
+                    continue;
+                }
+                filteredEdgeRefs[edgeRef] = this.edgeRefs[edgeRef];
+            }
+            this.edgeRefs = filteredEdgeRefs;
+        });
     }
 
     nodeChangePosition(nodeId, nodePosX, nodePosY) {
@@ -65,7 +84,6 @@ export default class Graph extends Component {
             if (edge.node1 !== nodeId && edge.node2 !== nodeId) {
                 continue;
             }
-
             this.edgeRefs[edgeId].handleNodePositionChange(
                 nodeId === edge.node1 ? 0: 1,
                 nodePosX,
@@ -86,6 +104,22 @@ export default class Graph extends Component {
             this.nodeRefs[nodeId].updatePosition(nodePos);
             return null;
         });
+    }
+
+    getNodes() {
+        return this.state.nodes;
+    }
+
+    getEdges() {
+        return this.state.edges;
+    }
+
+    getNodeRefs() {
+        return this.nodeRefs;
+    }
+
+    getEdgeRefs() {
+        return this.edgeRefs;
     }
 
     render() {

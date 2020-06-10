@@ -6,9 +6,13 @@ export default class Edge extends Component {
 
     constructor(props) {
         super(props);
+        this.state = this.buildState(props);
+    }
+
+    buildState(props) {
         let textPos = this.center(props.x1, props.y1, props.x2, props.y2);
 
-        this.state = {
+        return {
             width: props.width,
             x1: props.x1,
             y1: props.y1,
@@ -21,6 +25,10 @@ export default class Edge extends Component {
             node1: props.node1,
             node2: props.node2
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState(this.buildState(nextProps));
     }
 
     center(x1, y1, x2, y2) {

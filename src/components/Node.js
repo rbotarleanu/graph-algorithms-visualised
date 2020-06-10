@@ -6,21 +6,29 @@ export default class Node extends Component {
 
     constructor(props) {
         super(props);
-
         this.changePositionNotification = props.changePositionNotification;
         this.nodeId = props.nodeId;
         this.nodeRef = React.createRef();
 
-        this.state = {
+        this.state = this.buildState(props);
+    }
+
+    buildState(props) {
+        return {
             nodePosition: {
-                x: props.posX,
-                y: props.posY
+            x: props.posX,
+            y: props.posY
             },
             x: props.posX,
             y: props.posY,
             radius: props.radius,
             value: props.value
-        }
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.nodeId = nextProps.nodeId;
+        this.setState(this.buildState(nextProps));
     }
 
     dragMove(e, ui) {
@@ -44,7 +52,7 @@ export default class Node extends Component {
     }
 
     getId() {
-        return this.state.nodeId;
+        return this.nodeId;
     }
 
     updatePosition(newPos) {
