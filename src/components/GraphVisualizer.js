@@ -18,9 +18,9 @@ export default class GraphVisualizer extends Component {
             renderGraph: false,
             nodeSliderProps: {
                 currentValue: 10,
-                max: 100,
+                max: 30,
                 min: 2,
-                step: 5
+                step: 1
             },
             sparsitySliderProps: {
                 currentValue: 5,
@@ -28,9 +28,14 @@ export default class GraphVisualizer extends Component {
                 min: 0,
                 step: 1
             },
+            animationSpeedSliderProps: {
+                currentValue: 10,
+                max: 2000,
+                min: 0,
+                step: 10
+            },
             nodeRadius: 10,
-            numNodes: 10,
-            animationSpeed: 100
+            numNodes: 10
         };
 
         this.graphRef = null;
@@ -102,7 +107,7 @@ export default class GraphVisualizer extends Component {
         graph.updateGraphState(updates.nodeUpdates, updates.edgeUpdates);
         window.requestAnimationFrame(() => {
             setTimeout(() => {this.runAlgorithm(algorithm)},
-                              this.state.animationSpeed);
+                              this.state.animationSpeedSliderProps.currentValue);
         });
     }
 
@@ -120,6 +125,7 @@ export default class GraphVisualizer extends Component {
     sliderUpdate(property, newValue) {
         var nodeSliderProps = this.state.nodeSliderProps;
         var sparsitySliderProps = this.state.sparsitySliderProps;
+        var animationSpeedSliderProps = this.state.animationSpeedSliderProps;
         switch (property) {
             case 'Nodes':
                 nodeSliderProps.currentValue = newValue;
@@ -127,12 +133,15 @@ export default class GraphVisualizer extends Component {
             case 'Sparsity':
                 sparsitySliderProps.currentValue = newValue;
                 break;
+            case 'Animation speed':
+                animationSpeedSliderProps.currentValue = newValue;
             default:
                 return;
         }
         this.setState({
             nodeSliderProps: nodeSliderProps,
-            sparsitySliderProps: sparsitySliderProps
+            sparsitySliderProps: sparsitySliderProps,
+            animationSpeedSliderProps: animationSpeedSliderProps
         });
     }
 
@@ -149,12 +158,19 @@ export default class GraphVisualizer extends Component {
                     <Slider
                         label="Nodes"
                         sliderProps={this.state.nodeSliderProps}
+                        um=""
                         notifyGraphRedraw={this.sliderUpdate}
                     />
                     <Slider
                         label="Sparsity"
                         sliderProps={this.state.sparsitySliderProps}
-                        isPerc={true}
+                        um="%"
+                        notifyGraphRedraw={this.sliderUpdate}
+                    />
+                    <Slider
+                        label="Animation speed"
+                        sliderProps={this.state.animationSpeedSliderProps}
+                        um="ms"
                         notifyGraphRedraw={this.sliderUpdate}
                     />
                     <Button

@@ -165,7 +165,8 @@ export class FruchtermanReingoldFD {
     repulsion(v1, v2, numNodes) {
         var d = v1.distance(v2);
         var r = -Math.pow(this.optimalDistance(numNodes), 2) / d.l2norm();
-        return d.normalize().scalarMul(r / this.scale);
+        // artificially increase the repulsion force so the nodes stay apart
+        return d.normalize().scalarMul(r / this.scale * 2);
     }
 
     addRepulsionForces(nodeForces, nodes) {

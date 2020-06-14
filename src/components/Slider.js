@@ -9,25 +9,22 @@ export default class Slider extends Component {
         super(props);
         this.label = props.label;
         this.notifyGraphRedraw = props.notifyGraphRedraw;
-
-        if (props.isPerc) {
-            this.labelHandler = this.tooltipLabelPerc;
-        } else {
-            this.labelHandler = this.tooltipLabelNumber;
-        }
+        this.max = props.sliderProps.max / props.sliderProps.step;
+        this.min = props.sliderProps.min / props.sliderProps.step;
+        this.um = props.um;
 
         this.state = {
             sliderProps: props.sliderProps
         };
-        this.changeSliderValue.bind(this);
+        this.tooltipLabel = this.tooltipLabel.bind(this);
     }
 
-    tooltipLabelPerc(crtValue) {
-        return crtValue + "%";
+    convertToRealValue(value) {
+        return value * this.props.sliderProps.step;
     }
 
-    tooltipLabelNumber(crtValue) {
-        return crtValue;
+    tooltipLabel(crtValue) {
+        return this.convertToRealValue(crtValue) + this.um;
     }
 
     changeSliderValue(changeEvent) {
@@ -39,7 +36,7 @@ export default class Slider extends Component {
             }
         });
 
-        this.notifyGraphRedraw(this.label, newSliderValue);
+        this.notifyGraphRedraw(this.label, this.convertToRealValue(newSliderValue));
     }
 
     render() {
@@ -51,11 +48,12 @@ export default class Slider extends Component {
                 <div className="SliderChildDiv">
                     <RangeSlider
                         value={this.state.sliderProps.currentValue}
-                        min={this.state.sliderProps.min}
-                        max={this.state.sliderProps.max}
+                        min={this.min}
+                        max={this.max}
+                        step={this.state.sliderProps.step}
                         onChange={eventChange => this.changeSliderValue(eventChange)}
                         tooltip="on"
-                        tooltipLabel={this.labelHandler}
+                        tooltipLabel={this.tooltipLabel}
                     />
                 </div>
             </div>
