@@ -5,7 +5,6 @@
 - react-draggable to make the nodes move nicely; without this the performance is poor and dragging can be missed if cursor moves too fast
 
 # TODO
-- generate the positions using a spring layout
 - be able to select a source node
 - run dfs (change colors as it goes)
 - add a legend showing what the edge gradient means etc.

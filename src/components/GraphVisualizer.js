@@ -6,9 +6,14 @@ the screen.
 import React, { Component } from 'react';
 import '../styles/GraphVisualizer.css';
 import { Button } from 'react-bootstrap';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton'
 import Graph from './Graph.js';
 import Slider from './Slider.js';
-import { RandomLayout, FruchtermanReingoldFD } from '../algorithms/layout.js';
+import { RandomLayout } from '../algorithms/layout.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import AlgorithmBuilder from '../algorithms/constants.js';
+import SelectableContext from "react-bootstrap/SelectableContext";
 
 
 export default class GraphVisualizer extends Component {
@@ -36,7 +41,8 @@ export default class GraphVisualizer extends Component {
                 step: 10
             },
             nodeRadius: 10,
-            numNodes: 10
+            numNodes: 10,
+            selectedAlgorithm: 'Fruchterman-Reingold'
         };
 
         this.graphRef = null;
@@ -119,12 +125,19 @@ export default class GraphVisualizer extends Component {
     handleRunButton() {
         // var algorithm = new RandomMovement(50);
         this.setState({animate: true});
-        var algorithm = new FruchtermanReingoldFD(
+
+        var builder = new AlgorithmBuilder(
             this.state.graphDrawX + this.state.nodeRadius * 2,
             this.state.graphDrawY + this.state.nodeRadius,
             this.state.graphWidth,
             this.state.graphHeight,
-            50, 0.001);
+            )
+        var algorithm = builder.build(this.state.selectedAlgorithm);
+
+        if (algorithm === null) {
+            return;
+        }
+
         this.runAlgorithm(algorithm);
     }
 
@@ -179,6 +192,30 @@ export default class GraphVisualizer extends Component {
                         um="ms"
                         notifyGraphRedraw={this.sliderUpdate}
                     />
+
+                <SelectableContext.Provider value={false}>
+                
+                    <DropdownButton id="dropdown-basic-button"
+                        title={"Algorithm: " + this.state.selectedAlgorithm}
+                        onSelect={(e) => {this.setState({selectedAlgorithm: e})}}>
+                        <Dropdown.Header>Layout Algorithms</Dropdown.Header>
+                        <Dropdown.Item eventKey="Fruchterman-Reingold">Fruchterman-Reingold</Dropdown.Item>
+
+                        <Dropdown.Header>Unweighted Search Algorithms</Dropdown.Header>
+                        <Dropdown.Item eventKey="Depth-first search">Depth-first search</Dropdown.Item>
+                        <Dropdown.Item eventKey="Breadth-first search">Breadth-first search</Dropdown.Item>
+
+                        <Dropdown.Header>Weighted uninformed search algorithms</Dropdown.Header>
+                        <Dropdown.Item eventKey="Bellman-Ford">Bellman-Ford</Dropdown.Item>
+                        <Dropdown.Item eventKey="Floyd-Warshall">Floyd-Warshall</Dropdown.Item>
+                        <Dropdown.Item eventKey="Dijkstra">Dijkstra</Dropdown.Item>
+
+                        <Dropdown.Header>Weighted informed search algorithms</Dropdown.Header>
+                        <Dropdown.Item eventKey="Best-first search">Best-first search</Dropdown.Item>
+                        <Dropdown.Item eventKey="A*">A*</Dropdown.Item>
+                    </DropdownButton>
+                    </SelectableContext.Provider>
+
                     <Button
                         variant="primary"
                         onClick={this.handleGenerateGraphButton}
