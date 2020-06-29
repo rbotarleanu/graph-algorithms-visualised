@@ -15,6 +15,7 @@ export default class GraphVisualizer extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            animate: false,
             renderGraph: false,
             nodeSliderProps: {
                 currentValue: 10,
@@ -88,7 +89,8 @@ export default class GraphVisualizer extends Component {
         this.setState({
             nodes: graph.nodes,
             edges: graph.edges,
-            numNodes: graph.nodes.length
+            numNodes: graph.nodes.length,
+            animate: false
         });
         this.graphRef.remake(graph);
     }
@@ -106,13 +108,17 @@ export default class GraphVisualizer extends Component {
 
         graph.updateGraphState(updates.nodeUpdates, updates.edgeUpdates);
         window.requestAnimationFrame(() => {
-            setTimeout(() => {this.runAlgorithm(algorithm)},
-                              this.state.animationSpeedSliderProps.currentValue);
+            setTimeout(() => {
+                if (this.state.animate === true) {
+                    this.runAlgorithm(algorithm)};
+                },
+            this.state.animationSpeedSliderProps.currentValue);
         });
     }
 
     handleRunButton() {
         // var algorithm = new RandomMovement(50);
+        this.setState({animate: true});
         var algorithm = new FruchtermanReingoldFD(
             this.state.graphDrawX + this.state.nodeRadius * 2,
             this.state.graphDrawY + this.state.nodeRadius,
