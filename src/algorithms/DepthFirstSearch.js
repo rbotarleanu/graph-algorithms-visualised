@@ -1,0 +1,90 @@
+import NodeUpdate from './NodeUpdate.js';
+
+
+export class DepthFirstSearch {
+    
+    constructor(x, y, width, height, sourceNode) {
+        /*
+            Typical bounding box definition:
+            - (x,y) is the top left corner
+            - height/width gives the size
+            Graph definition:
+            - V: number of nodes
+            - S: sparsity
+            Algorithm parameters:
+            - iterations: number of iterations the algorithm runs 
+            - scale: scale of optimal distance
+        */
+        this.x = x;
+        this.y = y;
+        this.height = height;
+        this.width = width;
+
+        this.sourceNode = sourceNode;
+
+        this.step = this.step.bind(this);
+
+        this.visited = {[this.sourceNode]: true};        
+        this.stack = [{node: this.sourceNode, status: 'open'}];
+    }
+
+    step(nodes, edges) {
+        console.log(this.stack);
+        if (this.stack.length === 0) {
+            return null;
+        }
+
+        var nodeUpdates = [];
+        var item = this.stack.pop();
+        var currentNode = item['node'];
+        var currentNodeStatus = item['status'];
+        console.log("current:", currentNode, currentNodeStatus);
+
+        var nodeUpdate = new NodeUpdate(
+            currentNode,
+            nodes[currentNode].getX(),
+            nodes[currentNode].getY(),
+            currentNodeStatus === 'open' ? "yellow" : "green"
+        );
+        nodeUpdates.push(nodeUpdate);
+
+        if (currentNodeStatus === 'half-open') {
+            // skip if we backtrace to a half-open node
+            return {
+                nodeUpdates: nodeUpdates,
+                edgeUpdates: []
+            };
+        } else {
+            // we use this to close nodes after their children have been explored
+            this.stack.push({node: currentNode, status: 'half-open'});
+        }
+
+        for (var edgeId in edges) {
+            var edgeNode1 = edges[edgeId].getNode1();
+            var edgeNode2 = edges[edgeId].getNode2();
+            console.log("edgenode1", edgeNode1, "current", currentNode, "match", edgeNode1 == currentNode);
+            if (edgeNode1 != currentNode) {
+                continue;
+            }
+
+            if (this.visited[edgeNode2] !== undefined) {
+                continue;
+            }
+
+            console.log("add", edgeNode2);
+            this.stack.push({node: edgeNode2, status: 'open'});
+            this.visited[edgeNode2] = true;
+            // var nodeUpdate = new NodeUpdate(
+            //     edgeNode2,
+            //     nodes[edgeNode2].getX(),
+            //     nodes[edgeNode2].getY(),
+            //     "yellow");
+            // nodeUpdates.push(nodeUpdate);
+        }
+
+        return {
+            nodeUpdates: nodeUpdates,
+            edgeUpdates: []
+        };
+    }
+}

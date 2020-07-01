@@ -6,23 +6,23 @@ export default class Node extends Component {
 
     constructor(props) {
         super(props);
-        this.changePositionNotification = props.changePositionNotification;
+        this.changeAttributesNotification = props.changeAttributesNotification;
         this.nodeId = props.nodeId;
         this.nodeRef = React.createRef();
-
         this.state = this.buildState(props);
     }
 
     buildState(props) {
         return {
             nodePosition: {
-            x: props.posX,
-            y: props.posY
+                x: props.posX,
+                y: props.posY
             },
             x: props.posX,
             y: props.posY,
             radius: props.radius,
-            value: props.value
+            value: props.value,
+            fill: props.fill
         };
     }
 
@@ -39,8 +39,8 @@ export default class Node extends Component {
         e.stopPropagation();
         e.preventDefault();
 
-        this.changePositionNotification(
-            this.nodeId, newPosX, newPosY);
+        this.changeAttributesNotification(
+            this.nodeId, newPosX, newPosY, this.state.fill);
     }
 
     getX() {
@@ -58,15 +58,16 @@ export default class Node extends Component {
     updatePosition(newPos) {
         this.setState({nodePosition: {x: newPos.x, y: newPos.y}});
 
-        this.changePositionNotification(
-            this.nodeId, newPos.x, newPos.y);
+        this.changeAttributesNotification(
+            this.nodeId, newPos.x, newPos.y, this.state.fill);
     }
 
-    finalizeDragMovement(e) {
-        // this.setState({
-        //     initX: this.this.state.posX,
-        //     initY: this.state.posY
-        // });
+    updateColor(newColor) {
+        this.setState({fill: newColor});
+
+        this.changeAttributesNotification(
+            this.nodeId, this.state.nodePosition.x, this.state.nodePosition.y,
+            newColor);
     }
 
     render() {
@@ -76,14 +77,13 @@ export default class Node extends Component {
                 nodeRef={this.nodeRef}
                 position={this.state.nodePosition}
                 onDrag={(e, ui) => this.dragMove(e, ui)}
-                onStop={e => this.finalizeDragMovement(e)}
             >
                 <circle
                     cx={0}
                     cy={0}
                     ref={this.nodeRef}
                     r={this.state.radius}
-                    fill="red"
+                    fill={this.state.fill}
                 />
             </Draggable>
                 <text

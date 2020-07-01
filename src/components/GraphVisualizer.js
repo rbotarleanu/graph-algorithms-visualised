@@ -12,7 +12,7 @@ import Graph from './Graph.js';
 import Slider from './Slider.js';
 import { RandomLayout } from '../algorithms/layout.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AlgorithmBuilder from '../algorithms/constants.js';
+import AlgorithmBuilder from '../algorithms/AlgorithmMapping.js';
 import SelectableContext from "react-bootstrap/SelectableContext";
 
 
@@ -42,7 +42,8 @@ export default class GraphVisualizer extends Component {
             },
             nodeRadius: 10,
             numNodes: 10,
-            selectedAlgorithm: 'Fruchterman-Reingold'
+            selectedAlgorithm: 'Fruchterman-Reingold',
+            sourceNode: "0"
         };
 
         this.graphRef = null;
@@ -131,7 +132,7 @@ export default class GraphVisualizer extends Component {
             this.state.graphDrawY + this.state.nodeRadius,
             this.state.graphWidth,
             this.state.graphHeight,
-            )
+            this.state.sourceNode)
         var algorithm = builder.build(this.state.selectedAlgorithm);
 
         if (algorithm === null) {
@@ -193,33 +194,33 @@ export default class GraphVisualizer extends Component {
                         notifyGraphRedraw={this.sliderUpdate}
                     />
 
-                <SelectableContext.Provider value={false}>
-                
-                    <DropdownButton id="dropdown-basic-button"
-                        title={"Algorithm: " + this.state.selectedAlgorithm}
-                        onSelect={(e) => {this.setState({selectedAlgorithm: e})}}>
-                        <Dropdown.Header>Layout Algorithms</Dropdown.Header>
-                        <Dropdown.Item eventKey="Fruchterman-Reingold">Fruchterman-Reingold</Dropdown.Item>
-
-                        <Dropdown.Header>Unweighted Search Algorithms</Dropdown.Header>
-                        <Dropdown.Item eventKey="Depth-first search">Depth-first search</Dropdown.Item>
-                        <Dropdown.Item eventKey="Breadth-first search">Breadth-first search</Dropdown.Item>
-
-                        <Dropdown.Header>Weighted uninformed search algorithms</Dropdown.Header>
-                        <Dropdown.Item eventKey="Bellman-Ford">Bellman-Ford</Dropdown.Item>
-                        <Dropdown.Item eventKey="Floyd-Warshall">Floyd-Warshall</Dropdown.Item>
-                        <Dropdown.Item eventKey="Dijkstra">Dijkstra</Dropdown.Item>
-
-                        <Dropdown.Header>Weighted informed search algorithms</Dropdown.Header>
-                        <Dropdown.Item eventKey="Best-first search">Best-first search</Dropdown.Item>
-                        <Dropdown.Item eventKey="A*">A*</Dropdown.Item>
-                    </DropdownButton>
-                    </SelectableContext.Provider>
-
                     <Button
                         variant="primary"
                         onClick={this.handleGenerateGraphButton}
                     >Generate graph!</Button>
+
+                    <SelectableContext.Provider value={false}>
+                        <DropdownButton id="dropdown-basic-button"
+                            title={"Algorithm: " + this.state.selectedAlgorithm}
+                            onSelect={(e) => {this.setState({selectedAlgorithm: e})}}>
+                            <Dropdown.Header>Layout Algorithms</Dropdown.Header>
+                            <Dropdown.Item eventKey="Fruchterman-Reingold">Fruchterman-Reingold</Dropdown.Item>
+
+                            <Dropdown.Header>Unweighted Search Algorithms</Dropdown.Header>
+                            <Dropdown.Item eventKey="Depth-first search">Depth-first search</Dropdown.Item>
+                            <Dropdown.Item eventKey="Breadth-first search">Breadth-first search</Dropdown.Item>
+
+                            <Dropdown.Header>Weighted uninformed search algorithms</Dropdown.Header>
+                            <Dropdown.Item eventKey="Bellman-Ford">Bellman-Ford</Dropdown.Item>
+                            <Dropdown.Item eventKey="Floyd-Warshall">Floyd-Warshall</Dropdown.Item>
+                            <Dropdown.Item eventKey="Dijkstra">Dijkstra</Dropdown.Item>
+
+                            <Dropdown.Header>Weighted informed search algorithms</Dropdown.Header>
+                            <Dropdown.Item eventKey="Best-first search">Best-first search</Dropdown.Item>
+                            <Dropdown.Item eventKey="A*">A*</Dropdown.Item>
+                        </DropdownButton>
+                    </SelectableContext.Provider>
+
                     <Button
                         variant="primary"
                         onClick={this.handleRunButton}
@@ -233,6 +234,7 @@ export default class GraphVisualizer extends Component {
                             numNodes={this.state.numNodes}
                             nodeRadius={this.state.nodeRadius}
                             ref={(ref) => this.graphRef=ref}
+                            sourceNode={this.state.sourceNode}
                         />
                     }
                 </div>
