@@ -1,7 +1,7 @@
 import NodeUpdate from './NodeUpdate.js';
 
 
-export class DepthFirstSearch {
+export class BreadthFirstSearch {
     
     constructor(x, y, width, height, sourceNode) {
         /*
@@ -33,10 +33,11 @@ export class DepthFirstSearch {
         }
 
         var nodeUpdates = [];
-        var item = this.stack.pop();
+        var item = this.stack.shift();
         var currentNode = item['node'];
         var currentNodeStatus = item['status'];
 
+        // skip if we backtrace to a half-open node
         var nodeUpdate = new NodeUpdate(
             currentNode,
             nodes[currentNode].getX(),
@@ -46,14 +47,10 @@ export class DepthFirstSearch {
         nodeUpdates.push(nodeUpdate);
 
         if (currentNodeStatus === 'half-open') {
-            // skip if we backtrace to a half-open node
             return {
                 nodeUpdates: nodeUpdates,
                 edgeUpdates: []
             };
-        } else {
-            // we use this to close nodes after their children have been explored
-            this.stack.push({node: currentNode, status: 'half-open'});
         }
 
         for (var edgeId in edges) {
@@ -70,7 +67,17 @@ export class DepthFirstSearch {
 
             this.stack.push({node: edgeNode2, status: 'open'});
             this.visited[edgeNode2] = true;
+            var nodeUpdate = new NodeUpdate(
+                edgeNode2,
+                nodes[edgeNode2].getX(),
+                nodes[edgeNode2].getY(),
+                'yellow'
+            );
+            nodeUpdates.push(nodeUpdate);
         }
+
+        // we use this to close nodes after their children have been explored
+        this.stack.push({node: currentNode, status: 'half-open'});
 
         return {
             nodeUpdates: nodeUpdates,

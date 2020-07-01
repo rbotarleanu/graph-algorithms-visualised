@@ -1,6 +1,7 @@
 
 import { FruchtermanReingoldFD } from './layout.js';
 import { DepthFirstSearch } from './DepthFirstSearch.js';
+import { BreadthFirstSearch } from './BreadthFirstSearch.js';
 
 export default class AlgorithmBuilder {
 
@@ -22,6 +23,13 @@ export default class AlgorithmBuilder {
                 50, 0.001);
         } else if (algorithm === 'Depth-first search') {
             return new DepthFirstSearch(
+                this.x,
+                this.y,
+                this.w,
+                this.h,
+                this.sourceNode);
+        } else if (algorithm === 'Breadth-first search') {
+            return new BreadthFirstSearch(
                 this.x,
                 this.y,
                 this.w,
