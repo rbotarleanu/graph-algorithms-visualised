@@ -243,6 +243,10 @@ export class FruchtermanReingoldFD {
             var edgeNode1 = edges[edgeId].getNode1();
             var edgeNode2 = edges[edgeId].getNode2();
             edgeList.push(new Edge(edgeNode1, edgeNode2));
+
+            if (!edges[edgeId].isDirected()) {
+                edgeList.push(new Edge(edgeNode2, edgeNode1));
+            }
         }
         var nodeForces = {};
         this.addRepulsionForces(nodeForces, nodePositions);

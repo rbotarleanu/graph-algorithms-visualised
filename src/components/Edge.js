@@ -39,6 +39,10 @@ export default class Edge extends Component {
         }
     }
 
+    isDirected() {
+        return this.state.directed;
+    }
+
     getNode1() {
         return this.state.node1;
     }
@@ -136,7 +140,7 @@ export default class Edge extends Component {
                 x2={this.state.x2}
                 y1={this.state.y1}
                 y2={this.state.y2}
-                style={{"strokeWidth": this.state.width, markerEnd: "url(#markerArrow)"}}
+                style={{"strokeWidth": this.state.width, markerEnd: this.state.directed ? "url(#markerArrow)" : ""}}
                 stroke={this.state.x1 < this.state.x2 ? "url(#grad)" : "url(#gradInv"}
             />
             

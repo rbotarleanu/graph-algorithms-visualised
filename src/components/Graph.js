@@ -10,14 +10,15 @@ export default class Graph extends Component {
 
         this.state = {nodes: {}, edges: {},
                       nodeIncidentEdges: {},
-                      sourceNode: props.sourceNode};
+                      sourceNode: props.sourceNode,
+                      directed: props.directed};
         this.setGraphElements(this.state, props.nodes, props.edges);
-
         this.edgeRefs = {};
         this.nodeRefs = {};
 
         this.nodeChangeAttributes = this.nodeChangeAttributes.bind(this);
         this.remake = this.remake.bind(this);
+        this.updateDirection = this.updateDirection.bind(this);
     }
 
     setGraphElements(state, nodes, edges) {
@@ -115,6 +116,10 @@ export default class Graph extends Component {
         });
     }
 
+    updateDirection(newDirection) {
+        this.setState({directed: newDirection});
+    }
+
     getNodes() {
         return this.state.nodes;
     }
@@ -149,7 +154,7 @@ export default class Graph extends Component {
                                     node1={this.state.edges[edgeId].node1}
                                     node2={this.state.edges[edgeId].node2}
                                     ref={(ref) => this.edgeRefs[edgeId]=ref}
-                                    directed={true}
+                                    directed={this.state.directed}
                                 />
                             )
                         })

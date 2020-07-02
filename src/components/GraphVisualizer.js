@@ -13,7 +13,8 @@ import Slider from './Slider.js';
 import { RandomLayout } from '../algorithms/layout.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AlgorithmBuilder from '../algorithms/AlgorithmMapping.js';
-import SelectableContext from "react-bootstrap/SelectableContext";
+import SelectableContext from 'react-bootstrap/SelectableContext';
+import Form from 'react-bootstrap/Form';
 
 
 export default class GraphVisualizer extends Component {
@@ -43,7 +44,8 @@ export default class GraphVisualizer extends Component {
             nodeRadius: 10,
             numNodes: 10,
             selectedAlgorithm: 'Fruchterman-Reingold',
-            sourceNode: "0"
+            sourceNode: "0",
+            directed: false
         };
 
         this.graphRef = null;
@@ -171,6 +173,12 @@ export default class GraphVisualizer extends Component {
         this.renderGraph(height, width);
     }
 
+    handleDirectedSelect(e) {
+        var newDirection = this.state.directed ? false : true;
+        this.setState({directed: newDirection});
+        this.graphRef.updateDirection(newDirection);
+    }
+
     render() {
         return (
             <div className="visualizer" id="visualizer">
@@ -193,6 +201,11 @@ export default class GraphVisualizer extends Component {
                         um="ms"
                         notifyGraphRedraw={this.sliderUpdate}
                     />
+
+                    <Form.Check type="checkbox"
+                        label="directed"
+                        onChange={(e) => this.handleDirectedSelect(e)} />
+                    <Form.Check type="checkbox" label="weighted" />
 
                     <Button
                         variant="primary"
@@ -235,6 +248,7 @@ export default class GraphVisualizer extends Component {
                             nodeRadius={this.state.nodeRadius}
                             ref={(ref) => this.graphRef=ref}
                             sourceNode={this.state.sourceNode}
+                            directed={this.state.directed}
                         />
                     }
                 </div>
