@@ -43,14 +43,17 @@ class Vector2D {
 }
 
 class Edge {
-    constructor(u, v) {
+    constructor(u, v, w) {
         this.u = u;
         this.v = v;
+        this.w = w;
     }
-
 }
 
 export class RandomLayout {
+
+    MAX_EDGE_WEIGHT = 30;
+    MIN_EDGE_WEIGHT = 0;
 
     constructor(x, y, width, height, numNodes, sparsity) {
         /*
@@ -98,7 +101,8 @@ export class RandomLayout {
         for (var i = 0; i < this.numNodes; ++i) {
             for (var j = 0; j < this.numNodes; ++j) {
                 if (i !== j && Math.random() < this.sparsity) {
-                    edges.push(new Edge(i, j));
+                    var weight = Math.round(Math.random() * this.MAX_EDGE_WEIGHT + this.MIN_EDGE_WEIGHT);
+                    edges.push(new Edge(i, j, weight));
                 }
             }
         }
@@ -118,6 +122,8 @@ export class RandomLayout {
 
 export class FruchtermanReingoldFD {
     
+    REPULSION_INCREASE = 20;
+
     constructor(x, y, width, height, iterations, scale) {
         /*
             Typical bounding box definition:
@@ -166,7 +172,7 @@ export class FruchtermanReingoldFD {
         var d = v1.distance(v2);
         var r = -Math.pow(this.optimalDistance(numNodes), 2) / d.l2norm();
         // artificially increase the repulsion force so the nodes stay apart
-        return d.normalize().scalarMul(r / this.scale * 2);
+        return d.normalize().scalarMul(r / this.scale * this.REPULSION_INCREASE);
     }
 
     addRepulsionForces(nodeForces, nodes) {

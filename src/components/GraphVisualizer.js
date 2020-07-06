@@ -45,7 +45,8 @@ export default class GraphVisualizer extends Component {
             numNodes: 10,
             selectedAlgorithm: 'Fruchterman-Reingold',
             sourceNode: "0",
-            directed: false
+            directed: false,
+            weighted: false
         };
 
         this.graphRef = null;
@@ -179,6 +180,12 @@ export default class GraphVisualizer extends Component {
         this.graphRef.updateDirection(newDirection);
     }
 
+    handleWeightedSelect(e) {
+        var newWeigthed = this.state.weighted ? false : true;
+        this.setState({weighted: newWeigthed});
+        this.graphRef.updateWeightedStatus(newWeigthed);
+    }
+
     render() {
         return (
             <div className="visualizer" id="visualizer">
@@ -202,11 +209,15 @@ export default class GraphVisualizer extends Component {
                         notifyGraphRedraw={this.sliderUpdate}
                     />
 
-                    <Form.Check type="checkbox"
+                    <Form.Check
+                        type="checkbox"
                         label="directed"
                         onChange={(e) => this.handleDirectedSelect(e)} />
-                    <Form.Check type="checkbox" label="weighted" />
-
+                    <Form.Check 
+                        type="checkbox"
+                        label="weighted"
+                        onChange={(e) => this.handleWeightedSelect(e)}
+                        />
                     <Button
                         variant="primary"
                         onClick={this.handleGenerateGraphButton}

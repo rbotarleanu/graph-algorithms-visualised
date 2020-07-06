@@ -36,10 +36,12 @@ export default class Graph extends Component {
             var edgeId = i.toString();
             var node1 = edges[i].u.toString();
             var node2 = edges[i].v.toString();
+            var edgeWeight = edges[i].w;
             state.edges[edgeId] = {
                 "node1":  node1,
                 "node2":  node2,
-                width: 1
+                width: 1,
+                weight: edgeWeight
             };
         }
     }
@@ -120,6 +122,10 @@ export default class Graph extends Component {
         this.setState({directed: newDirection});
     }
 
+    updateWeightedStatus(newWeighted) { 
+        this.setState({weighted: newWeighted});
+    }
+
     getNodes() {
         return this.state.nodes;
     }
@@ -155,6 +161,7 @@ export default class Graph extends Component {
                                     node2={this.state.edges[edgeId].node2}
                                     ref={(ref) => this.edgeRefs[edgeId]=ref}
                                     directed={this.state.directed}
+                                    weight={this.state.weighted ? this.state.edges[edgeId].weight : ""}
                                 />
                             )
                         })
