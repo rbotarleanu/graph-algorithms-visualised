@@ -177,7 +177,7 @@ export default class Edge extends Component {
             <text
                 x={this.state.textX}
                 y={this.state.textY}
-            >{this.state.weight + " " + this.state.highlight}</text>
+            >{this.state.weight}</text>
             </svg>
         )
     }

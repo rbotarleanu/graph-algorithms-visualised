@@ -41,7 +41,7 @@ export class BellmanFord {
                 }
             }
 
-        } else if (this.crtStep){// === this.maxSteps) {
+        } else if (this.crtStep === this.maxSteps) {
             return null;
         }
         
@@ -65,7 +65,6 @@ export class BellmanFord {
                     edgeWeight,
                     true
                 ));
-                console.log("Relax", edgeId, edgeNode1, edgeNode2);
             }
         }
 
