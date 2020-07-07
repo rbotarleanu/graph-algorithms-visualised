@@ -22,7 +22,8 @@ export default class Node extends Component {
             y: props.posY,
             radius: props.radius,
             value: props.value,
-            fill: props.fill
+            fill: props.fill,
+            distances: props.distances
         };
     }
 
@@ -55,6 +56,16 @@ export default class Node extends Component {
         return this.nodeId;
     }
 
+    printDistances() {
+        var s = "";
+        for (var node in this.state.distances) {
+            let value = this.state.distances[node] === Infinity ? "∞" : this.state.distances[node];
+            s += node + ": " + value + ", ";
+        }
+
+        return s.substring(0, s.length - 2);
+    }
+
     render() {
         return (
             <svg>
@@ -77,6 +88,13 @@ export default class Node extends Component {
                     style={{font: "15px serif", zIndex: -1}}
                 >
                     {this.nodeId}
+                </text>
+                <text
+                    x={this.state.nodePosition.x - this.state.radius * 30}
+                    y={this.state.nodePosition.y - this.state.radius * 3}
+                    style={{font: "15px serif", zIndex: -1}}
+                >
+                    {this.state.distances ? this.printDistances() : ""}
                 </text>
             </svg>
         )

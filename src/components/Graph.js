@@ -30,7 +30,8 @@ export default class Graph extends Component {
                 "posX": nodes[i].x,
                 "posY": nodes[i].y,
                 radius: this.radius,
-                fill: this.state.sourceNode !== nodeId ? "red" : "blue"
+                fill: this.state.sourceNode !== nodeId ? "red" : "blue",
+                distances: undefined
             };
         }
         for (i = 0; i < edges.length; ++i) {
@@ -83,21 +84,31 @@ export default class Graph extends Component {
         }, 0);
     }
 
-    nodeChangeAttributes(nodeId, nodePosX, nodePosY, fill) {
+    nodeChangeAttributes(nodeId, nodePosX, nodePosY, fill, distances) {
         var stateNodes = this.state.nodes;
-        stateNodes[nodeId].posX = nodePosX;
-        stateNodes[nodeId].posY = nodePosY;
-        stateNodes[nodeId].fill = fill;
-        for (var edgeId in this.state.edges) {
-            var edge = this.state.edges[edgeId];
-            if (edge.node1 !== nodeId && edge.node2 !== nodeId) {
-                continue;
+
+        if (fill !== undefined) {
+            stateNodes[nodeId].fill = fill;
+        }
+
+        if (nodePosX !== undefined && nodePosY !== undefined) {
+            stateNodes[nodeId].posX = nodePosX;
+            stateNodes[nodeId].posY = nodePosY;
+            for (var edgeId in this.state.edges) {
+                var edge = this.state.edges[edgeId];
+                if (edge.node1 !== nodeId && edge.node2 !== nodeId) {
+                    continue;
+                }
+                this.edgeRefs[edgeId].handleNodePositionChange(
+                    nodeId === edge.node1 ? 0: 1,
+                    nodePosX,
+                    nodePosY
+                );
             }
-            this.edgeRefs[edgeId].handleNodePositionChange(
-                nodeId === edge.node1 ? 0: 1,
-                nodePosX,
-                nodePosY
-            );
+        }
+
+        if (distances !== undefined) {
+            stateNodes[nodeId].distances = distances;
         }
 
         this.setState({nodes: stateNodes});
@@ -117,7 +128,8 @@ export default class Graph extends Component {
                 nodeUpdate.nodeId,
                 nodeUpdate.x,
                 nodeUpdate.y,
-                nodeUpdate.color);
+                nodeUpdate.color,
+                nodeUpdate.distances);
 
             return null;
         });
@@ -193,6 +205,7 @@ export default class Graph extends Component {
                                     posY={this.state.nodes[nodeId].posY}
                                     radius={this.state.nodes[nodeId].radius}
                                     fill={this.state.nodes[nodeId].fill}
+                                    distances={this.state.nodes[nodeId].distances}
                                     changeAttributesNotification={this.nodeChangeAttributes}
                                     ref={(ref) => this.nodeRefs[nodeId]=ref}
                                 />

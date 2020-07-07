@@ -29,10 +29,9 @@ export class BellmanFord {
     }
 
     step(nodes, edges) {
-
         if (this.crtStep === 0) {
             this.distances = {};
-            this.maxSteps = Math.min(this.maxSteps, nodes.length - 1);
+            this.maxSteps = Math.min(this.maxSteps, Object.keys(nodes).length - 1);
             for (var nodeId in nodes) {
                 if (nodeId === this.sourceNode) {
                     this.distances[nodeId] = 0;
@@ -66,12 +65,31 @@ export class BellmanFord {
                     true
                 ));
             }
+
+            if (!edges[edgeId].isDirected()) {
+                if (this.distances[edgeNode1] > this.distances[edgeNode2] + edgeWeight) {
+                    newDistances[edgeNode1] = this.distances[edgeNode2] + edgeWeight;
+                    edgeUpdates.push(new EdgeUpdate(
+                        edgeId,
+                        edgeWeight,
+                        true
+                    ));
+                }
+            }
         }
 
         this.distances = {...newDistances};
 
+        nodeUpdates.push(new NodeUpdate(
+            this.sourceNode,
+            undefined,
+            undefined,
+            undefined,
+            this.distances
+        ));
+
         return {
-            nodeUpdates: [],
+            nodeUpdates: nodeUpdates,
             edgeUpdates: edgeUpdates
         };
     }
