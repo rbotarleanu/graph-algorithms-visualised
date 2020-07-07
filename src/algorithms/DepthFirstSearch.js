@@ -61,13 +61,13 @@ export class DepthFirstSearch {
             var edgeNode2 = edges[edgeId].getNode2();
 
             if (!edges[edgeId].isDirected()) {
-                if (edgeNode1 != currentNode &&
-                    edgeNode2 != currentNode) {
+                if (edgeNode1 !== currentNode &&
+                    edgeNode2 !== currentNode) {
                         continue;
-                } else if (edgeNode2 == currentNode) {
+                } else if (edgeNode2 === currentNode) {
                     edgeNode2 = edgeNode1;
                 }
-            } else if (edgeNode1 != currentNode && edges[edgeId].isDirected()) {
+            } else if (edgeNode1 !== currentNode && edges[edgeId].isDirected()) {
                 continue;
             }
 

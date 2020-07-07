@@ -99,8 +99,8 @@ export class RandomLayout {
         var edges = [];
 
         for (var i = 0; i < this.numNodes; ++i) {
-            for (var j = 0; j < this.numNodes; ++j) {
-                if (i !== j && Math.random() < this.sparsity) {
+            for (var j = i + 1; j < this.numNodes; ++j) {
+                if (Math.random() < this.sparsity) {
                     var weight = Math.round(Math.random() * this.MAX_EDGE_WEIGHT + this.MIN_EDGE_WEIGHT);
                     edges.push(new Edge(i, j, weight));
                 }
@@ -122,7 +122,7 @@ export class RandomLayout {
 
 export class FruchtermanReingoldFD {
     
-    REPULSION_INCREASE = 20;
+    REPULSION_INCREASE = 50;
 
     constructor(x, y, width, height, iterations, scale) {
         /*

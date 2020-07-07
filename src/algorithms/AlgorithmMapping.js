@@ -2,6 +2,7 @@
 import { FruchtermanReingoldFD } from './layout.js';
 import { DepthFirstSearch } from './DepthFirstSearch.js';
 import { BreadthFirstSearch } from './BreadthFirstSearch.js';
+import { BellmanFord } from './BellmanFord.js';
 
 export default class AlgorithmBuilder {
 
@@ -14,29 +15,37 @@ export default class AlgorithmBuilder {
     }
 
     build(algorithm) {
-        if (algorithm === 'Fruchterman-Reingold') {
-            return new FruchtermanReingoldFD(
-                this.x,
-                this.y,
-                this.w,
-                this.h,
-                50, 0.001);
-        } else if (algorithm === 'Depth-first search') {
-            return new DepthFirstSearch(
-                this.x,
-                this.y,
-                this.w,
-                this.h,
-                this.sourceNode);
-        } else if (algorithm === 'Breadth-first search') {
-            return new BreadthFirstSearch(
-                this.x,
-                this.y,
-                this.w,
-                this.h,
-                this.sourceNode);
-        } else {
-            return null;
+        switch (algorithm) {
+            case 'Fruchterman-Reingold':
+                return new FruchtermanReingoldFD(
+                    this.x,
+                    this.y,
+                    this.w,
+                    this.h,
+                    50, 0.001);
+            case 'Depth-first search':
+                return new DepthFirstSearch(
+                    this.x,
+                    this.y,
+                    this.w,
+                    this.h,
+                    this.sourceNode);
+            case 'Breadth-first search':
+                return new BreadthFirstSearch(
+                    this.x,
+                    this.y,
+                    this.w,
+                    this.h,
+                    this.sourceNode);
+            case 'Bellman-Ford':
+                return new BellmanFord(
+                    this.x,
+                    this.y,
+                    this.w,
+                    this.h,
+                    this.sourceNode);
+            default:
+                return null;
         }
     }
 }

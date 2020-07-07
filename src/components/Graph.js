@@ -17,6 +17,7 @@ export default class Graph extends Component {
         this.nodeRefs = {};
 
         this.nodeChangeAttributes = this.nodeChangeAttributes.bind(this);
+        this.edgeChangeAttributes = this.edgeChangeAttributes.bind(this);
         this.remake = this.remake.bind(this);
         this.updateDirection = this.updateDirection.bind(this);
     }
@@ -29,7 +30,7 @@ export default class Graph extends Component {
                 "posX": nodes[i].x,
                 "posY": nodes[i].y,
                 radius: this.radius,
-                fill: this.state.sourceNode != nodeId ? "red" : "blue"
+                fill: this.state.sourceNode !== nodeId ? "red" : "blue"
             };
         }
         for (i = 0; i < edges.length; ++i) {
@@ -41,7 +42,8 @@ export default class Graph extends Component {
                 "node1":  node1,
                 "node2":  node2,
                 width: 1,
-                weight: edgeWeight
+                weight: edgeWeight,
+                highlight: false
             };
         }
     }
@@ -65,7 +67,7 @@ export default class Graph extends Component {
                 if (this.nodeRefs[nodeRef] === null) {
                     continue;
                 }
-                this.nodeRefs[nodeRef].fill = nodeRef == this.state.sourceNode ? 'blue' : 'red';
+                this.nodeRefs[nodeRef].fill = nodeRef === this.state.sourceNode ? 'blue' : 'red';
                 filteredNodeRefs[nodeRef] = this.nodeRefs[nodeRef];
             }
             this.nodeRefs = filteredNodeRefs;
@@ -101,18 +103,31 @@ export default class Graph extends Component {
         this.setState({nodes: stateNodes});
     }
 
+    edgeChangeAttributes(edgeId, edgeWeight, edgeHighlight) {
+        var edges = this.state.edges;
+        edges[edgeId].weight = edgeWeight;
+        edges[edgeId].highlight = edgeHighlight;
+        
+        this.setState({edges: edges});
+    }
+
     updateGraphState(nodeUpdates, edgeUpdates) {
         nodeUpdates.map(nodeUpdate => {
-            var nodeId = nodeUpdate.nodeId;
-            var nodePos = {
-                x: nodeUpdate.x,
-                y: nodeUpdate.y
-            };
-            this.nodeRefs[nodeId].updatePosition(nodePos);
+            this.nodeChangeAttributes(
+                nodeUpdate.nodeId,
+                nodeUpdate.x,
+                nodeUpdate.y,
+                nodeUpdate.color);
 
-            if (nodeUpdate.color !== undefined) {
-                this.nodeRefs[nodeId].updateColor(nodeUpdate.color);
-            }
+            return null;
+        });
+
+        edgeUpdates.map(edgeUpdate => {
+            this.edgeChangeAttributes(
+                edgeUpdate.edgeId,
+                edgeUpdate.weight,
+                edgeUpdate.highlight
+            )
 
             return null;
         });
@@ -151,6 +166,7 @@ export default class Graph extends Component {
                             return (
                                 <Edge
                                     key={edgeId}
+                                    edgeId={edgeId}
                                     width={this.state.edges[edgeId].width}
                                     x1={this.state.nodes[this.state.edges[edgeId].node1].posX}
                                     y1={this.state.nodes[this.state.edges[edgeId].node1].posY}
@@ -161,6 +177,7 @@ export default class Graph extends Component {
                                     node2={this.state.edges[edgeId].node2}
                                     ref={(ref) => this.edgeRefs[edgeId]=ref}
                                     directed={this.state.directed}
+                                    highlight={this.state.edges[edgeId].highlight}
                                     weight={this.state.weighted ? this.state.edges[edgeId].weight : ""}
                                 />
                             )

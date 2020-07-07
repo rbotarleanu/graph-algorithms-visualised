@@ -5,3 +5,8 @@ line {
     left: 0;
     top: 0;
 }
+
+text {
+    font-size: x-small;
+    font-style: oblique;
+}

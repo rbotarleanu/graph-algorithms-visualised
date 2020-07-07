@@ -43,7 +43,7 @@ export default class GraphVisualizer extends Component {
             },
             nodeRadius: 10,
             numNodes: 10,
-            selectedAlgorithm: 'Fruchterman-Reingold',
+            selectedAlgorithm: 'Bellman-Ford',
             sourceNode: "0",
             directed: false,
             weighted: false
@@ -158,6 +158,7 @@ export default class GraphVisualizer extends Component {
                 break;
             case 'Animation speed':
                 animationSpeedSliderProps.currentValue = newValue;
+                break;
             default:
                 return;
         }

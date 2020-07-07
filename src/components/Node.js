@@ -55,21 +55,6 @@ export default class Node extends Component {
         return this.nodeId;
     }
 
-    updatePosition(newPos) {
-        this.setState({nodePosition: {x: newPos.x, y: newPos.y}});
-
-        this.changeAttributesNotification(
-            this.nodeId, newPos.x, newPos.y, this.state.fill);
-    }
-
-    updateColor(newColor) {
-        this.setState({fill: newColor});
-
-        this.changeAttributesNotification(
-            this.nodeId, this.state.nodePosition.x, this.state.nodePosition.y,
-            newColor);
-    }
-
     render() {
         return (
             <svg>
