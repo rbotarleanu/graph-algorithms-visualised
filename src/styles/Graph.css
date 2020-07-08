@@ -1,7 +1,8 @@
 .Graph {
     position: relative;
-    height: 95%;
+    height: 100%;
     width: 100%;
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .Graph svg {

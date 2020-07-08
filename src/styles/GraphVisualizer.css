@@ -5,14 +5,18 @@
 }
 
 .Toolbar {
-    /* background-color: lightblue; */
     width: 100%;
-    height: 10%;
+    height: 8%;
     position: relative;
     z-index: 100;
     padding-bottom: 10px;
     padding-top: 10px;
-} 
+}
+
+.form-check {
+    margin-top: 7px;
+    margin-left: 5px;
+}
 
 .Toolbar div {
     float: left;

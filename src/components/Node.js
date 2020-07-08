@@ -89,8 +89,9 @@ export default class Node extends Component {
                 >
                     {this.nodeId}
                 </text>
+
                 <text
-                    x={this.state.nodePosition.x - this.state.radius * 30}
+                    x={this.state.nodePosition.x - (!this.state.distances ? 0 : Object.keys(this.state.distances).length * 15)}
                     y={this.state.nodePosition.y - this.state.radius * 3}
                     style={{font: "15px serif", zIndex: -1}}
                 >

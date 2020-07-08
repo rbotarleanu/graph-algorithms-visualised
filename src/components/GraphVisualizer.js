@@ -127,7 +127,6 @@ export default class GraphVisualizer extends Component {
     }
 
     handleRunButton() {
-        // var algorithm = new RandomMovement(50);
         this.setState({animate: true});
 
         var builder = new AlgorithmBuilder(
@@ -252,17 +251,17 @@ export default class GraphVisualizer extends Component {
                     >Run!</Button>
                 </div>
                 <div className="Graph" id="graph">
-                    {this.state.renderGraph && 
-                        <Graph
-                            nodes={this.state.nodes}
-                            edges={this.state.edges}
-                            numNodes={this.state.numNodes}
-                            nodeRadius={this.state.nodeRadius}
-                            ref={(ref) => this.graphRef=ref}
-                            sourceNode={this.state.sourceNode}
-                            directed={this.state.directed}
-                        />
-                    }
+                        {this.state.renderGraph && 
+                            <Graph
+                                nodes={this.state.nodes}
+                                edges={this.state.edges}
+                                numNodes={this.state.numNodes}
+                                nodeRadius={this.state.nodeRadius}
+                                ref={(ref) => this.graphRef=ref}
+                                sourceNode={this.state.sourceNode}
+                                directed={this.state.directed}
+                            />
+                        }
                 </div>
             </div>
         )
