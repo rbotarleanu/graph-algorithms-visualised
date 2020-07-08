@@ -226,7 +226,10 @@ export default class GraphVisualizer extends Component {
                     <SelectableContext.Provider value={false}>
                         <DropdownButton id="dropdown-basic-button"
                             title={"Algorithm: " + this.state.selectedAlgorithm}
-                            onSelect={(e) => {this.setState({selectedAlgorithm: e})}}>
+                            onSelect={(e) => {
+                                this.graphRef.resetGraphAlgorithmVisuals();
+                                this.setState({selectedAlgorithm: e})}
+                            }>
                             <Dropdown.Header>Layout Algorithms</Dropdown.Header>
                             <Dropdown.Item eventKey="Fruchterman-Reingold">Fruchterman-Reingold</Dropdown.Item>
 

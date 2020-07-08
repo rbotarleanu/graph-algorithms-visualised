@@ -145,6 +145,19 @@ export default class Graph extends Component {
         });
     }
 
+    resetGraphAlgorithmVisuals() {
+        console.log("resetting");
+        for (var nodeId in this.state.nodes) {
+            let fill = nodeId === this.state.sourceNode ? 'blue' : 'red';
+            this.nodeChangeAttributes(nodeId, undefined, undefined, fill, {});
+        }
+
+        for (var edgeId in this.state.edges) {
+            let highlight = false;
+            this.edgeChangeAttributes(edgeId, undefined, highlight);
+        }
+    }
+
     updateDirection(newDirection) {
         this.setState({directed: newDirection});
     }
