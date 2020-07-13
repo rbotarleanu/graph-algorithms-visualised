@@ -3,6 +3,7 @@ import { FruchtermanReingoldFD } from './layout.js';
 import { DepthFirstSearch } from './DepthFirstSearch.js';
 import { BreadthFirstSearch } from './BreadthFirstSearch.js';
 import { BellmanFord } from './BellmanFord.js';
+import { Dijkstra } from './Dijkstra.js';
 
 export default class AlgorithmBuilder {
 
@@ -39,6 +40,13 @@ export default class AlgorithmBuilder {
                     this.sourceNode);
             case 'Bellman-Ford':
                 return new BellmanFord(
+                    this.x,
+                    this.y,
+                    this.w,
+                    this.h,
+                    this.sourceNode);
+            case 'Dijkstra':
+                return new Dijkstra(
                     this.x,
                     this.y,
                     this.w,

@@ -43,7 +43,7 @@ export default class GraphVisualizer extends Component {
             },
             nodeRadius: 10,
             numNodes: 10,
-            selectedAlgorithm: 'Bellman-Ford',
+            selectedAlgorithm: 'Dijkstra',
             sourceNode: "0",
             directed: false,
             weighted: false
