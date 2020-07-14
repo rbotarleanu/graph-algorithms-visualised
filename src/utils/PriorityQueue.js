@@ -99,6 +99,13 @@ class PriorityQueue {
         this.index[val['key']] = this.heap.length - 1;
         this.siftUp(this.heap.length - 1);
     }
+
+    increasePriority(node) {
+        // Increases the priority of a node
+        let idx = this.index[node['key']];
+        this.heap[idx] = node;
+        this.siftUp(idx);
+    }
 }
 
 module.exports = PriorityQueue;

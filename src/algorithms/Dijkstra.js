@@ -75,20 +75,24 @@ export class Dijkstra {
 
             if (newDistances[edgeNode2] > this.distances[nodeId] + edgeWeight) {
                 newDistances[edgeNode2] = this.distances[nodeId] + edgeWeight;
+
+                let heapNode = {
+                    'key': edgeNode2,
+                    'value': newDistances[edgeNode2]
+                };
+
+                if (this.Q.hasKey(edgeNode2)) {
+                    this.Q.increasePriority(heapNode);
+                } else {
+                    this.Q.emplace(heapNode);
+                }
+
                 edgeUpdates.push(new EdgeUpdate(
                     edgeId,
                     edgeWeight,
                     true
                 ));
             }
-        }
-
-
-        for (var nodeId in this.distances) {
-            if (this.visited[nodeId] !== undefined || newDistances[nodeId] == this.distances[nodeId]) {
-                continue;
-            }
-            this.Q.emplace({"key": nodeId, "value": this.distances[nodeId]});
         }
 
         this.distances = newDistances;
