@@ -116,9 +116,15 @@ export default class Graph extends Component {
 
     edgeChangeAttributes(edgeId, edgeWeight, edgeHighlight) {
         var edges = this.state.edges;
-        edges[edgeId].weight = edgeWeight;
-        edges[edgeId].highlight = edgeHighlight;
-        
+
+        if (edgeWeight) {
+            edges[edgeId].weight = edgeWeight;
+        }
+
+        if (edgeHighlight) {
+            edges[edgeId].highlight = edgeHighlight;
+        }
+
         this.setState({edges: edges});
     }
 
