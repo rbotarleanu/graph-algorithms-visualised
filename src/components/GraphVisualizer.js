@@ -43,7 +43,7 @@ export default class GraphVisualizer extends Component {
             },
             nodeRadius: 10,
             numNodes: 10,
-            selectedAlgorithm: 'Dijkstra',
+            selectedAlgorithm: 'Floyd-Warshall',
             sourceNode: "0",
             directed: false,
             weighted: false
@@ -178,12 +178,14 @@ export default class GraphVisualizer extends Component {
         var newDirection = this.state.directed ? false : true;
         this.setState({directed: newDirection});
         this.graphRef.updateDirection(newDirection);
+        this.graphRef.resetGraphAlgorithmVisuals();
     }
 
     handleWeightedSelect(e) {
         var newWeigthed = this.state.weighted ? false : true;
         this.setState({weighted: newWeigthed});
         this.graphRef.updateWeightedStatus(newWeigthed);
+        this.graphRef.resetGraphAlgorithmVisuals();
     }
 
     render() {

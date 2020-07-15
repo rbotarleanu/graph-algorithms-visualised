@@ -4,6 +4,7 @@ import { DepthFirstSearch } from './DepthFirstSearch.js';
 import { BreadthFirstSearch } from './BreadthFirstSearch.js';
 import { BellmanFord } from './BellmanFord.js';
 import { Dijkstra } from './Dijkstra.js';
+import { FloydWarshall } from './FloydWarshall.js';
 
 export default class AlgorithmBuilder {
 
@@ -52,6 +53,12 @@ export default class AlgorithmBuilder {
                     this.w,
                     this.h,
                     this.sourceNode);
+            case 'Floyd-Warshall':
+                return new FloydWarshall(
+                    this.x,
+                    this.y,
+                    this.w,
+                    this.h)
             default:
                 return null;
         }
