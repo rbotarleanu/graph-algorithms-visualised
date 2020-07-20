@@ -59,11 +59,42 @@ export default class Node extends Component {
     printDistances() {
         var s = "";
         for (var node in this.state.distances) {
-            let value = this.state.distances[node] === Infinity ? "∞" : this.state.distances[node];
+            var values = this.state.distances[node];
+
+            if (!values) {
+                s += "";
+                continue;
+            }
+
+            if (values['f'] !== undefined) {
+                let gScore = values['g'] === Infinity ? "∞" : values['g'];
+                let fScore = values['f'] === Infinity ? "∞" : values['f'];
+
+                value = gScore + "(" + fScore + ")";
+            } else {
+                var value = values === Infinity ? "∞" : values;
+            }
+
             s += node + ": " + value + ", ";
         }
 
         return s.substring(0, s.length - 2);
+    }
+
+    getDistancesOffset(distances) {
+        if (!distances) {
+            return 0;
+        }
+
+        if (!distances[this.nodeId]) {
+            return 0;
+        }
+
+        if (distances[this.nodeId]['f'] !== undefined) {
+            return (!distances ? 0 : Object.keys(distances).length * 30);
+        } else {
+            return (!distances ? 0 : Object.keys(distances).length * 15);
+        }
     }
 
     render() {
@@ -91,7 +122,7 @@ export default class Node extends Component {
                 </text>
 
                 <text
-                    x={this.state.nodePosition.x - (!this.state.distances ? 0 : Object.keys(this.state.distances).length * 15)}
+                    x={this.state.nodePosition.x - this.getDistancesOffset(this.state.distances)}
                     y={this.state.nodePosition.y - this.state.radius * 3}
                     style={{font: "15px serif", zIndex: -1}}
                 >

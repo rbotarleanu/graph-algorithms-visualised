@@ -24,27 +24,27 @@ export default class GraphVisualizer extends Component {
             animate: false,
             renderGraph: false,
             nodeSliderProps: {
-                currentValue: 10,
+                currentValue: 7,
                 max: 30,
                 min: 2,
                 step: 1
             },
             sparsitySliderProps: {
-                currentValue: 5,
+                currentValue: 30,
                 max: 100,
                 min: 0,
                 step: 1
             },
             animationSpeedSliderProps: {
-                currentValue: 10,
+                currentValue: 100,
                 max: 2000,
                 min: 0,
                 step: 10
             },
             nodeRadius: 10,
-            numNodes: 10,
-            selectedAlgorithm: 'Floyd-Warshall',
+            selectedAlgorithm: 'A*',
             sourceNode: "0",
+            targetNode: "6",
             directed: false,
             weighted: false
         };
@@ -61,8 +61,10 @@ export default class GraphVisualizer extends Component {
         const graphDrawY = this.props.graphDrawY;
         const graphWidth = width - this.state.nodeRadius * 2 - graphDrawX;
         const graphHeight = height - this.state.nodeRadius * 2 - graphDrawY;
+        const sparsity = this.state.sparsitySliderProps.currentValue / 100;
 
-        var graph = this.makeGraph(10, 0.1, graphWidth, graphHeight,
+        var graph = this.makeGraph(this.state.nodeSliderProps.currentValue,
+            sparsity, graphWidth, graphHeight,
             graphDrawX, graphDrawY);
         this.setState({
             renderGraph: true,
@@ -89,6 +91,9 @@ export default class GraphVisualizer extends Component {
     }
 
     handleGenerateGraphButton() {
+        let targetNodeIdx =  this.state.nodeSliderProps.currentValue - 1;
+        let targetNode = targetNodeIdx.toString();
+
         var graph = this.makeGraph(
             this.state.nodeSliderProps.currentValue,
             this.state.sparsitySliderProps.currentValue / 100,
@@ -96,13 +101,14 @@ export default class GraphVisualizer extends Component {
             this.state.graphHeight,
             this.state.graphDrawX,
             this.state.graphDrawY);
+        
         this.setState({
             nodes: graph.nodes,
             edges: graph.edges,
-            numNodes: graph.nodes.length,
+            targetNode: targetNode,
             animate: false
         });
-        this.graphRef.remake(graph);
+        this.graphRef.remake(graph, targetNode);
     }
 
     runAlgorithm(algorithm) {
@@ -134,7 +140,8 @@ export default class GraphVisualizer extends Component {
             this.state.graphDrawY + this.state.nodeRadius,
             this.state.graphWidth,
             this.state.graphHeight,
-            this.state.sourceNode)
+            this.state.sourceNode,
+            this.state.targetNode);
         var algorithm = builder.build(this.state.selectedAlgorithm);
 
         if (algorithm === null) {
@@ -245,7 +252,6 @@ export default class GraphVisualizer extends Component {
                             <Dropdown.Item eventKey="Dijkstra">Dijkstra</Dropdown.Item>
 
                             <Dropdown.Header>Weighted informed search algorithms</Dropdown.Header>
-                            <Dropdown.Item eventKey="Best-first search">Best-first search</Dropdown.Item>
                             <Dropdown.Item eventKey="A*">A*</Dropdown.Item>
                         </DropdownButton>
                     </SelectableContext.Provider>
@@ -260,10 +266,11 @@ export default class GraphVisualizer extends Component {
                             <Graph
                                 nodes={this.state.nodes}
                                 edges={this.state.edges}
-                                numNodes={this.state.numNodes}
+                                numNodes={this.state.nodeSliderProps.currentValue}
                                 nodeRadius={this.state.nodeRadius}
                                 ref={(ref) => this.graphRef=ref}
                                 sourceNode={this.state.sourceNode}
+                                targetNode={this.state.targetNode}
                                 directed={this.state.directed}
                             />
                         }

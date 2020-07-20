@@ -52,6 +52,11 @@ class PriorityQueue {
         return this.index[key] !== undefined;
     }
 
+    clear() {
+        this.heap = [];
+        this.index = {};
+    }
+
     length() {
         return this.heap.length;
     }

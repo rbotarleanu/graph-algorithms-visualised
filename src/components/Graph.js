@@ -11,6 +11,7 @@ export default class Graph extends Component {
         this.state = {nodes: {}, edges: {},
                       nodeIncidentEdges: {},
                       sourceNode: props.sourceNode,
+                      targetNode: props.targetNode,
                       directed: props.directed};
         this.setGraphElements(this.state, props.nodes, props.edges);
         this.edgeRefs = {};
@@ -22,15 +23,27 @@ export default class Graph extends Component {
         this.updateDirection = this.updateDirection.bind(this);
     }
 
+    getNodeColor(nodeId) {
+        var color = 'red';
+        if (this.state.sourceNode === nodeId) {
+            color = 'blue';
+        } else if (this.state.targetNode === nodeId) {
+            color = 'purple';
+        }
+        
+        return color;
+    }
+
     setGraphElements(state, nodes, edges) {
         for (var i = 0; i < nodes.length; ++i) {
             var nodeId = i.toString();
+
             state.nodes[nodeId] = {
                 "id": nodeId,
                 "posX": nodes[i].x,
                 "posY": nodes[i].y,
                 radius: this.radius,
-                fill: this.state.sourceNode !== nodeId ? "red" : "blue",
+                fill: this.getNodeColor(nodeId),
                 distances: undefined
             };
         }
@@ -49,7 +62,7 @@ export default class Graph extends Component {
         }
     }
 
-    remake(graph) {
+    remake(graph, targetNode) {
         var newState = this.state;
         const nodes = graph.nodes;
         const edges = graph.edges;
@@ -59,6 +72,7 @@ export default class Graph extends Component {
         newState.nodeIncidentEdges = {};
         newState.nodeRefs = {};
         newState.edgeRefs = {};
+        newState.targetNode = targetNode;
 
         this.setGraphElements(newState, nodes, edges);
         this.setState(newState);
@@ -68,7 +82,7 @@ export default class Graph extends Component {
                 if (this.nodeRefs[nodeRef] === null) {
                     continue;
                 }
-                this.nodeRefs[nodeRef].fill = nodeRef === this.state.sourceNode ? 'blue' : 'red';
+                this.nodeRefs[nodeRef].fill = this.getNodeColor(nodeRef);
                 filteredNodeRefs[nodeRef] = this.nodeRefs[nodeRef];
             }
             this.nodeRefs = filteredNodeRefs;
@@ -153,7 +167,7 @@ export default class Graph extends Component {
 
     resetGraphAlgorithmVisuals() {
         for (var nodeId in this.state.nodes) {
-            let fill = nodeId === this.state.sourceNode ? 'blue' : 'red';
+            let fill = this.getNodeColor(nodeId);
             this.nodeChangeAttributes(nodeId, undefined, undefined, fill, {});
         }
 

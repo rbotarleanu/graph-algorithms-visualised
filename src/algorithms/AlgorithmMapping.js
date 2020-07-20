@@ -5,15 +5,17 @@ import { BreadthFirstSearch } from './BreadthFirstSearch.js';
 import { BellmanFord } from './BellmanFord.js';
 import { Dijkstra } from './Dijkstra.js';
 import { FloydWarshall } from './FloydWarshall.js';
+import { AStarSearch } from './AStarSearch.js';
 
 export default class AlgorithmBuilder {
 
-    constructor(x, y, w, h, sourceNode) {
+    constructor(x, y, w, h, sourceNode, targetNode) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         this.sourceNode = sourceNode;
+        this.targetNode = targetNode;
     }
 
     build(algorithm) {
@@ -59,6 +61,14 @@ export default class AlgorithmBuilder {
                     this.y,
                     this.w,
                     this.h)
+            case 'A*':
+                return new AStarSearch(
+                    this.x,
+                    this.y,
+                    this.w,
+                    this.h,
+                    this.sourceNode,
+                    this.targetNode);
             default:
                 return null;
         }
