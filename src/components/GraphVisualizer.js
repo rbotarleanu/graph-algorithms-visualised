@@ -42,7 +42,7 @@ export default class GraphVisualizer extends Component {
                 step: 10
             },
             nodeRadius: 10,
-            selectedAlgorithm: 'A*',
+            selectedAlgorithm: 'Fruchterman-Reingold',
             sourceNode: "0",
             targetNode: "6",
             directed: false,
@@ -227,10 +227,6 @@ export default class GraphVisualizer extends Component {
                         label="weighted"
                         onChange={(e) => this.handleWeightedSelect(e)}
                         />
-                    <Button
-                        variant="primary"
-                        onClick={this.handleGenerateGraphButton}
-                    >Generate graph!</Button>
 
                     <SelectableContext.Provider value={false}>
                         <DropdownButton id="dropdown-basic-button"
@@ -256,10 +252,30 @@ export default class GraphVisualizer extends Component {
                         </DropdownButton>
                     </SelectableContext.Provider>
 
-                    <Button
-                        variant="primary"
-                        onClick={this.handleRunButton}
-                    >Run!</Button>
+                    <div class="btn-toolbar"  style={{float: "right"}}>
+                        <Button
+                            variant="outline-primary"
+                            onClick={this.handleGenerateGraphButton}
+                        >Generate graph</Button>
+
+                        <Button
+                            className="editorButton"
+                            variant="outline-primary"
+                        >Source</Button>
+
+                        <Button
+                            variant="outline-primary"
+                            >Target</Button>
+                        
+                        <Button
+                            variant="outline-primary"
+                            >Add edge</Button>
+
+                        <Button
+                            variant="outline-primary"
+                            onClick={this.handleRunButton}
+                        >Run</Button>
+                    </div>
                 </div>
                 <div className="Graph" id="graph">
                         {this.state.renderGraph && 
