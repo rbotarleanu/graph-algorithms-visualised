@@ -92,7 +92,7 @@ export default class Node extends Component {
         }
 
         if (distances[this.nodeId]['f'] !== undefined) {
-            return (!distances ? 0 : Object.keys(distances).length * 30);
+            return (!distances ? 0 : Object.keys(distances).length * 25);
         } else {
             return (!distances ? 0 : Object.keys(distances).length * 15);
         }
