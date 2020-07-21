@@ -55,7 +55,8 @@ export default class GraphVisualizer extends Component {
             targetNode: "6",
             directed: false,
             weighted: false,
-            editorMode: this.EDITOR_OPTIONS.none
+            editorMode: this.EDITOR_OPTIONS.none,
+            editorMemory: []
         };
 
         this.graphRef = null;
@@ -101,8 +102,10 @@ export default class GraphVisualizer extends Component {
     }
 
     handleGenerateGraphButton() {
-        let targetNodeIdx =  this.state.nodeSliderProps.currentValue - 1;
+        let targetNodeIdx = this.state.nodeSliderProps.currentValue - 1;
+        let sourceNodeIdx = "0";
         let targetNode = targetNodeIdx.toString();
+        let sourceNode = sourceNodeIdx.toString();
 
         var graph = this.makeGraph(
             this.state.nodeSliderProps.currentValue,
@@ -115,10 +118,11 @@ export default class GraphVisualizer extends Component {
         this.setState({
             nodes: graph.nodes,
             edges: graph.edges,
+            sourceNode: sourceNode,
             targetNode: targetNode,
             animate: false
         });
-        this.graphRef.remake(graph, targetNode);
+        this.graphRef.remake(graph, sourceNode, targetNode);
     }
 
     runAlgorithm(algorithm) {
@@ -232,35 +236,96 @@ export default class GraphVisualizer extends Component {
         }
     }
 
+    handleAddEdge() {
+        if (this.state.editorMode !== this.EDITOR_OPTIONS.none) {
+            return;
+        }
+
+        let graph = this.graphRef;
+        var nodeUpdates = [];
+
+        for (var nodeId in graph.getNodes()) {
+            let color = 'grey';
+            nodeUpdates.push(new NodeUpdate(nodeId, undefined, undefined, color, undefined));
+        }
+
+        graph.updateGraphState(nodeUpdates, []);
+        this.setState({editorMode: this.EDITOR_OPTIONS.edge});
+    }
+
+    _updateNode(selectedNodeId) {
+        let otherNode = this.state.editorMode === this.EDITOR_OPTIONS.source ? this.state.targetNode : this.state.sourceNode;
+        var nodeUpdates = [];
+        let graph = this.graphRef;
+
+        for (var nodeId in graph.getNodes()) {
+            if (nodeId === otherNode) {
+                continue;
+            }
+            
+            var color = 'red';
+            if (nodeId === selectedNodeId) {
+                color = this.state.editorMode === this.EDITOR_OPTIONS.source ? 'blue' : 'purple';
+            }
+
+            nodeUpdates.push(new NodeUpdate(nodeId, undefined, undefined, color, undefined));
+        }
+
+        let update = {[this.state.editorMode]: selectedNodeId};
+        graph.updateGraphState(nodeUpdates, []);
+
+        if (this.state.editorMode === this.EDITOR_OPTIONS.source) {
+            graph.updateSourceNode(selectedNodeId);
+        } else {
+            graph.updateTargetNode(selectedNodeId);
+        }
+
+        this.setState({
+            editorMode: this.EDITOR_OPTIONS.none,
+            editorMemory: [],
+            ...update
+            });
+    }
+
+    _addEdge(nodeIds) {
+        let u = nodeIds[0];
+        let v = nodeIds[1];
+        let graph = this.graphRef;
+        let edges = graph.getEdges();
+        if (graph.hasEdge(u, v)) {
+            return;
+        }
+
+        var newEdgeId = Object.keys(edges).length + 1;
+        newEdgeId = newEdgeId.toString();
+
+        graph.addEdge(newEdgeId, u, v);
+
+        this.setState({
+            editorMode: this.EDITOR_OPTIONS.none,
+            editorMemory: []
+        });
+    }
+
     updateEditor(selectedNodeId) {
         if (this.state.editorMode === this.EDITOR_OPTIONS.none) {
             return;
         }
         
         if (this.state.editorMode !== this.EDITOR_OPTIONS.edge) {
-            let otherNode = this.state.editorMode === this.EDITOR_OPTIONS.source ? this.state.targetNode : this.state.sourceNode;
-            var nodeUpdates = [];
-            let graph = this.graphRef;
+            this._updateNode(selectedNodeId);
+        } else {
+            let editorMemory = this.state.editorMemory;
+            editorMemory.push(selectedNodeId);
 
-            for (var nodeId in graph.getNodes()) {
-                if (nodeId === otherNode) {
-                    continue;
-                }
-                
-                var color = 'red';
-                if (nodeId === selectedNodeId) {
-                    color = this.state.editorMode === this.EDITOR_OPTIONS.source ? 'blue' : 'purple';
-                }
-
-                nodeUpdates.push(new NodeUpdate(nodeId, undefined, undefined, color, undefined));
+            if (editorMemory.length === 2) {
+                this._addEdge(editorMemory);
+            } else {
+                this.setState({editorMemory: editorMemory});
+                this.graphRef.updateGraphState(
+                    [new NodeUpdate(selectedNodeId, undefined, undefined, 'green', undefined)],
+                    []);
             }
-
-            let update = {[this.state.editorMode]: selectedNodeId};
-            graph.updateGraphState(nodeUpdates, []);
-            this.setState({
-                editorMode: this.EDITOR_OPTIONS.none,
-                ...update
-            });
         }
     }
 
@@ -347,6 +412,7 @@ export default class GraphVisualizer extends Component {
                         <Button
                             variant="outline-primary"
                             disabled={this.state.inEditorMode}
+                            onClick={() => {this.handleAddEdge()}}
                             >Add edge</Button>
 
                         <Button

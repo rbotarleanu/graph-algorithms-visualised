@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Node from './Node.js';
 import Edge from './Edge.js';
 import '../styles/Graph.css';
+import { RandomLayout } from '../algorithms/layout.js';
+
 
 export default class Graph extends Component {
     constructor(props) {
@@ -64,7 +66,7 @@ export default class Graph extends Component {
         }
     }
 
-    remake(graph, targetNode) {
+    remake(graph, sourceNode, targetNode) {
         var newState = this.state;
         const nodes = graph.nodes;
         const edges = graph.edges;
@@ -75,6 +77,7 @@ export default class Graph extends Component {
         newState.nodeRefs = {};
         newState.edgeRefs = {};
         newState.targetNode = targetNode;
+        newState.sourceNode = sourceNode;
 
         this.setGraphElements(newState, nodes, edges);
         this.setState(newState);
@@ -205,6 +208,45 @@ export default class Graph extends Component {
 
     nodeOnClick(nodeId) {
         this.updateEditorTransaction(nodeId);
+    }
+
+    updateSourceNode(nodeId) {
+        this.setState({sourceNode: nodeId});
+    }
+
+    updateTargetNode(nodeId) {
+        this.setState({targetNode: nodeId});
+    }
+
+    hasEdge(u, v) {
+        for (var edgeId in this.edges) {
+            let node1 = this.edges[edgeId].node1;
+            let node2 = this.edges[edgeId].node1;
+
+            if (node1 === u && node2 === v) {
+                return true;
+            }
+
+            if (!this.state.directed && node2 === u && node1 === v) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    addEdge(edgeId, u, v) {
+        let edges = this.state.edges;
+        edges[edgeId] = {
+            "node1": u,
+            "node2": v,
+            width: 1,
+            weight: RandomLayout.makeRandomWeight(),
+            highlight: false
+        }
+        this.setState({edges: edges});
+
+        requestAnimationFrame(() => {this.resetGraphAlgorithmVisuals();});
     }
 
     render() {

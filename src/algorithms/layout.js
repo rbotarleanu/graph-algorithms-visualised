@@ -52,8 +52,8 @@ class Edge {
 
 export class RandomLayout {
 
-    MAX_EDGE_WEIGHT = 30;
-    MIN_EDGE_WEIGHT = 0;
+    static MAX_EDGE_WEIGHT = 30;
+    static MIN_EDGE_WEIGHT = 0;
 
     constructor(x, y, width, height, numNodes, sparsity) {
         /*
@@ -95,13 +95,17 @@ export class RandomLayout {
         return nodes;
     }
 
+    static makeRandomWeight() {
+        return Math.round(Math.random() * RandomLayout.MAX_EDGE_WEIGHT + RandomLayout.MIN_EDGE_WEIGHT);
+    }
+
     makeRandomEdges() {
         var edges = [];
 
         for (var i = 0; i < this.numNodes; ++i) {
             for (var j = i + 1; j < this.numNodes; ++j) {
                 if (Math.random() < this.sparsity) {
-                    var weight = Math.round(Math.random() * this.MAX_EDGE_WEIGHT + this.MIN_EDGE_WEIGHT);
+                    var weight = RandomLayout.makeRandomWeight();
                     edges.push(new Edge(i, j, weight));
                 }
             }
