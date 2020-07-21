@@ -17,8 +17,10 @@ export default class Graph extends Component {
         this.edgeRefs = {};
         this.nodeRefs = {};
 
+        this.updateEditorTransaction = props.updateTransaction;
         this.nodeChangeAttributes = this.nodeChangeAttributes.bind(this);
         this.edgeChangeAttributes = this.edgeChangeAttributes.bind(this);
+        this.nodeOnClick = this.nodeOnClick.bind(this);
         this.remake = this.remake.bind(this);
         this.updateDirection = this.updateDirection.bind(this);
     }
@@ -201,6 +203,10 @@ export default class Graph extends Component {
         return this.edgeRefs;
     }
 
+    nodeOnClick(nodeId) {
+        this.updateEditorTransaction(nodeId);
+    }
+
     render() {
         return (
             <div className="Graph">
@@ -239,6 +245,7 @@ export default class Graph extends Component {
                                     fill={this.state.nodes[nodeId].fill}
                                     distances={this.state.nodes[nodeId].distances}
                                     changeAttributesNotification={this.nodeChangeAttributes}
+                                    onClickNotification={this.nodeOnClick}
                                     ref={(ref) => this.nodeRefs[nodeId]=ref}
                                 />
                             )

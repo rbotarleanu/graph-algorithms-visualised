@@ -7,6 +7,7 @@ export default class Node extends Component {
     constructor(props) {
         super(props);
         this.changeAttributesNotification = props.changeAttributesNotification;
+        this.onClickNotification = props.onClickNotification;
         this.nodeId = props.nodeId;
         this.nodeRef = React.createRef();
         this.state = this.buildState(props);
@@ -104,6 +105,7 @@ export default class Node extends Component {
                 nodeRef={this.nodeRef}
                 position={this.state.nodePosition}
                 onDrag={(e, ui) => this.dragMove(e, ui)}
+                onMouseDown={() => this.onClickNotification(this.nodeId)}
             >
                 <circle
                     cx={0}

@@ -15,9 +15,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AlgorithmBuilder from '../algorithms/AlgorithmMapping.js';
 import SelectableContext from 'react-bootstrap/SelectableContext';
 import Form from 'react-bootstrap/Form';
+import NodeUpdate from '../algorithms/NodeUpdate.js';
 
 
 export default class GraphVisualizer extends Component {
+    EDITOR_OPTIONS = {
+        'none': 'none',
+        'source': 'sourceNode',
+        'target': 'targetNode',
+        'edge': 3
+    };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -46,7 +54,8 @@ export default class GraphVisualizer extends Component {
             sourceNode: "0",
             targetNode: "6",
             directed: false,
-            weighted: false
+            weighted: false,
+            editorMode: this.EDITOR_OPTIONS.none
         };
 
         this.graphRef = null;
@@ -54,6 +63,7 @@ export default class GraphVisualizer extends Component {
         this.sliderUpdate = this.sliderUpdate.bind(this);
         this.handleRunButton = this.handleRunButton.bind(this);
         this.handleGenerateGraphButton = this.handleGenerateGraphButton.bind(this);
+        this.updateEditor = this.updateEditor.bind(this);
     }
 
     renderGraph(height, width) {
@@ -195,6 +205,65 @@ export default class GraphVisualizer extends Component {
         this.graphRef.resetGraphAlgorithmVisuals();
     }
 
+    handleNodeSelection(nodeToChange) {
+        if (this.state.editorMode !== this.EDITOR_OPTIONS.none) {
+            return;
+        }
+
+        let otherNode = nodeToChange === 'sourceNode' ? this.state.targetNode : this.state.sourceNode;
+        let graph = this.graphRef;
+        var nodeUpdates = [];
+
+        for (var nodeId in graph.getNodes()) {
+            if (nodeId === otherNode) {
+                continue;
+            }
+
+            let color = 'grey';
+            nodeUpdates.push(new NodeUpdate(nodeId, undefined, undefined, color, undefined));
+        }
+
+        graph.updateGraphState(nodeUpdates, []);
+
+        if (nodeToChange === 'sourceNode') {
+            this.setState({editorMode: this.EDITOR_OPTIONS.source});
+        } else {
+            this.setState({editorMode: this.EDITOR_OPTIONS.target});
+        }
+    }
+
+    updateEditor(selectedNodeId) {
+        if (this.state.editorMode === this.EDITOR_OPTIONS.none) {
+            return;
+        }
+        
+        if (this.state.editorMode !== this.EDITOR_OPTIONS.edge) {
+            let otherNode = this.state.editorMode === this.EDITOR_OPTIONS.source ? this.state.targetNode : this.state.sourceNode;
+            var nodeUpdates = [];
+            let graph = this.graphRef;
+
+            for (var nodeId in graph.getNodes()) {
+                if (nodeId === otherNode) {
+                    continue;
+                }
+                
+                var color = 'red';
+                if (nodeId === selectedNodeId) {
+                    color = this.state.editorMode === this.EDITOR_OPTIONS.source ? 'blue' : 'purple';
+                }
+
+                nodeUpdates.push(new NodeUpdate(nodeId, undefined, undefined, color, undefined));
+            }
+
+            let update = {[this.state.editorMode]: selectedNodeId};
+            graph.updateGraphState(nodeUpdates, []);
+            this.setState({
+                editorMode: this.EDITOR_OPTIONS.none,
+                ...update
+            });
+        }
+    }
+
     render() {
         return (
             <div className="visualizer" id="visualizer">
@@ -215,22 +284,26 @@ export default class GraphVisualizer extends Component {
                         label="Animation speed"
                         sliderProps={this.state.animationSpeedSliderProps}
                         um="ms"
+                        disabled={this.state.inEditorMode}
                         notifyGraphRedraw={this.sliderUpdate}
                     />
 
                     <Form.Check
                         type="checkbox"
                         label="directed"
+                        disabled={this.state.inEditorMode}
                         onChange={(e) => this.handleDirectedSelect(e)} />
                     <Form.Check 
                         type="checkbox"
                         label="weighted"
+                        disabled={this.state.inEditorMode}
                         onChange={(e) => this.handleWeightedSelect(e)}
                         />
 
                     <SelectableContext.Provider value={false}>
                         <DropdownButton id="dropdown-basic-button"
                             title={"Algorithm: " + this.state.selectedAlgorithm}
+                            disabled={this.state.inEditorMode}
                             onSelect={(e) => {
                                 this.graphRef.resetGraphAlgorithmVisuals();
                                 this.setState({selectedAlgorithm: e})}
@@ -252,28 +325,34 @@ export default class GraphVisualizer extends Component {
                         </DropdownButton>
                     </SelectableContext.Provider>
 
-                    <div class="btn-toolbar"  style={{float: "right"}}>
+                    <div className="btn-toolbar"  style={{float: "right"}}>
                         <Button
                             variant="outline-primary"
                             onClick={this.handleGenerateGraphButton}
+                            disabled={this.state.inEditorMode}
                         >Generate graph</Button>
 
                         <Button
-                            className="editorButton"
                             variant="outline-primary"
+                            onClick={() => {this.handleNodeSelection("sourceNode")}}
+                            disabled={this.state.inEditorMode}
                         >Source</Button>
 
                         <Button
                             variant="outline-primary"
+                            onClick={() => {this.handleNodeSelection("targetNode")}}
+                            disabled={this.state.inEditorMode}
                             >Target</Button>
                         
                         <Button
                             variant="outline-primary"
+                            disabled={this.state.inEditorMode}
                             >Add edge</Button>
 
                         <Button
                             variant="outline-primary"
                             onClick={this.handleRunButton}
+                            disabled={this.state.inEditorMode}
                         >Run</Button>
                     </div>
                 </div>
@@ -288,6 +367,7 @@ export default class GraphVisualizer extends Component {
                                 sourceNode={this.state.sourceNode}
                                 targetNode={this.state.targetNode}
                                 directed={this.state.directed}
+                                updateTransaction={this.updateEditor}
                             />
                         }
                 </div>
