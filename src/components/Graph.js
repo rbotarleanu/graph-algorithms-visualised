@@ -3,6 +3,8 @@ import Node from './Node.js';
 import Edge from './Edge.js';
 import '../styles/Graph.css';
 import { RandomLayout } from '../algorithms/layout.js';
+import { Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 export default class Graph extends Component {
@@ -14,7 +16,10 @@ export default class Graph extends Component {
                       nodeIncidentEdges: {},
                       sourceNode: props.sourceNode,
                       targetNode: props.targetNode,
-                      directed: props.directed};
+                      directed: props.directed,
+                      editorMode: false,
+                      editorPos: {x: 0, y: 0},
+                      selectedEdge: null};
         this.setGraphElements(this.state, props.nodes, props.edges);
         this.edgeRefs = {};
         this.nodeRefs = {};
@@ -25,6 +30,7 @@ export default class Graph extends Component {
         this.nodeOnClick = this.nodeOnClick.bind(this);
         this.remake = this.remake.bind(this);
         this.updateDirection = this.updateDirection.bind(this);
+        this.notifyEdgeClick = this.notifyEdgeClick.bind(this);
     }
 
     getNodeColor(nodeId) {
@@ -136,7 +142,7 @@ export default class Graph extends Component {
     edgeChangeAttributes(edgeId, edgeWeight, edgeHighlight) {
         var edges = this.state.edges;
 
-        if (edgeWeight) {
+        if (!isNaN(edgeWeight)) {
             edges[edgeId].weight = edgeWeight;
         }
 
@@ -249,10 +255,26 @@ export default class Graph extends Component {
         requestAnimationFrame(() => {this.resetGraphAlgorithmVisuals();});
     }
 
+    notifyEdgeClick(edgeId, edgePosX, edgePosY) {
+        let newEditorPos = {x: edgePosX - 100, y: edgePosY - 50};
+        this.setState({editorMode: true, editorPos: newEditorPos, selectedEdge: edgeId});
+    }
+
+    handleEdgeWeightChange(e) {
+        var newWeight = e.target.value;
+
+        if (!newWeight) {
+            newWeight = 0;
+        }
+
+        newWeight = Number.parseInt(newWeight);
+        this.edgeChangeAttributes(this.state.selectedEdge, newWeight, undefined, undefined);
+    }
+
     render() {
         return (
             <div className="Graph">
-                <svg>
+                <svg onClick={() => {this.setState({editorMode: false})}}>
                     {
                         Object.keys(this.state.edges).map((edgeId, _) => {
                             return (
@@ -271,6 +293,7 @@ export default class Graph extends Component {
                                     directed={this.state.directed}
                                     highlight={this.state.edges[edgeId].highlight}
                                     weight={this.state.weighted ? this.state.edges[edgeId].weight : ""}
+                                    notifyClick={this.notifyEdgeClick}
                                 />
                             )
                         })
@@ -294,6 +317,23 @@ export default class Graph extends Component {
                         })
                     }
                 </svg>
+                {this.state.editorMode && 
+                    <div
+                        className="edgeEditor"
+                        style={{
+                            position: "absolute",
+                            top: this.state.editorPos.y,
+                            left: this.state.editorPos.x,
+                            float: "left"
+                        }}>                    
+                    <form onSubmit={e => {e.preventDefault();}}>
+                        Weight: <input
+                            className="edgeWeightInput"
+                            type="text"
+                            value={this.state.edges[this.state.selectedEdge].weight}
+                            onChange={(val) => {this.handleEdgeWeightChange(val)}}/>
+                    </form>
+                </div>}
             </div>
         )
     }

@@ -5,9 +5,11 @@
 - react-draggable to make the nodes move nicely; without this the performance is poor and dragging can be missed if cursor moves too fast
 
 # TODO
-- be able to select a source node
-- run dfs (change colors as it goes)
-- add a legend showing what the edge gradient means etc.
+- add ability to delete an edge and change its weight
+- clean-up code: create constants from magic variables etc (e.g. colors)
+- write documentation
+- make a github.io page
+- make it public 
 
 # Algorithms
 

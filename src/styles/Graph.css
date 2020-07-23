@@ -9,3 +9,8 @@
     height: 100%;
     width: 100%;
 }
+
+.edgeWeightInput {
+    width: 35px;
+    font-size: medium;
+}

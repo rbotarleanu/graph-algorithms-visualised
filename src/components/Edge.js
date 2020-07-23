@@ -18,6 +18,7 @@ export default class Edge extends Component {
 
         this.gradId = "grad-" + this.edgeId;
         this.gradInvId = "gradInv-" + this.edgeId;
+        this.notifyClick = props.notifyClick;
     }
 
     getColor(start) {
@@ -50,7 +51,8 @@ export default class Edge extends Component {
             node1: props.node1,
             node2: props.node2,
             nodeRadius: props.nodeRadius,
-            highlight: props.highlight
+            highlight: props.highlight,
+            showMenu: false
         };
     }
 
@@ -101,83 +103,94 @@ export default class Edge extends Component {
             textY: textPos.y - 2,
         });
     }
+    
+    handleClick(e) {
+        // blocks the click event on the graph svg to prevent the closure of the
+        // editor box
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.notifyClick(this.edgeId, this.state.textX, this.state.textY)
+    }
 
     render() {
         return (
-
             <svg>
-            <defs>
-                <marker id="markerArrow"
-                    markerWidth={this.state.nodeRadius}
-                    markerHeight={this.state.nodeRadius}
-                    refX={this.state.nodeRadius + 5}
-                    refY={this.state.nodeRadius / 2}
-                    orient="auto">
-                    <path d="M0,0 L0,10 L6,5 L0,0" />
-                </marker>
-                {this.state.directed &&
-                    <linearGradient id={this.gradId} x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" style={{
-                            stopColor: this.getColor(true),
-                            stopOpacity: "1"
-                        }} />
-                        <stop offset="100%" style={{
-                            stopColor: this.getColor(false),
-                            stopOpacity: "1"
-                        }} />
-                    </linearGradient>
-                }
-                {this.state.directed &&
-                    <linearGradient id={this.gradInvId} x1="100%" y1="0%" x2="0%" y2="0%">
-                        <stop offset="0%" style={{
-                            stopColor: this.getColor(false),
-                            stopOpacity: "1"
-                        }} />
-                        <stop offset="100%" style={{
-                            stopColor: this.getColor(true),
-                            stopOpacity: "1"
-                        }} />
-                    </linearGradient>
-                }
-                {!this.state.directed &&
-                    <linearGradient id={this.gradId} x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" style={{
-                            stopColor: this.getColor(false),
-                            stopOpacity: "1"
-                        }} />
-                        <stop offset="100%" style={{
-                            stopColor: this.getColor(false),
-                            stopOpacity: "1"
-                        }} />
-                    </linearGradient>
-                }
-                {!this.state.directed &&
-                    <linearGradient id={this.gradInvId} x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" style={{
-                            stopColor: this.getColor(false),
-                            stopOpacity: "1"
-                        }} />
-                        <stop offset="100%" style={{
-                            stopColor: this.getColor(false),
-                            stopOpacity: "1"
-                        }} />
-                    </linearGradient>
-                }
-            </defs>
-            <line
-                className="Line"
-                x1={this.state.x1}
-                x2={this.state.x2}
-                y1={this.state.y1}
-                y2={this.state.y2}
-                style={{"strokeWidth": this.state.width, markerEnd: this.state.directed ? "url(#markerArrow)" : ""}}
-                stroke={this.state.x1 < this.state.x2 ? "url(#" + this.gradId + ")" : "url(#" + this.gradInvId + ")"}
-            />
-            
-            <text
-                x={this.state.textX}
-                y={this.state.textY}
-            >{this.state.weight}</text>
+                <defs>
+                    <marker id="markerArrow"
+                        markerWidth={this.state.nodeRadius}
+                        markerHeight={this.state.nodeRadius}
+                        refX={this.state.nodeRadius + 5}
+                        refY={this.state.nodeRadius / 2}
+                        orient="auto">
+                        <path d="M0,0 L0,10 L6,5 L0,0" />
+                    </marker>
+                    {this.state.directed &&
+                        <linearGradient id={this.gradId} x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style={{
+                                stopColor: this.getColor(true),
+                                stopOpacity: "1"
+                            }} />
+                            <stop offset="100%" style={{
+                                stopColor: this.getColor(false),
+                                stopOpacity: "1"
+                            }} />
+                        </linearGradient>
+                    }
+                    {this.state.directed &&
+                        <linearGradient id={this.gradInvId} x1="100%" y1="0%" x2="0%" y2="0%">
+                            <stop offset="0%" style={{
+                                stopColor: this.getColor(false),
+                                stopOpacity: "1"
+                            }} />
+                            <stop offset="100%" style={{
+                                stopColor: this.getColor(true),
+                                stopOpacity: "1"
+                            }} />
+                        </linearGradient>
+                    }
+                    {!this.state.directed &&
+                        <linearGradient id={this.gradId} x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style={{
+                                stopColor: this.getColor(false),
+                                stopOpacity: "1"
+                            }} />
+                            <stop offset="100%" style={{
+                                stopColor: this.getColor(false),
+                                stopOpacity: "1"
+                            }} />
+                        </linearGradient>
+                    }
+                    {!this.state.directed &&
+                        <linearGradient id={this.gradInvId} x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style={{
+                                stopColor: this.getColor(false),
+                                stopOpacity: "1"
+                            }} />
+                            <stop offset="100%" style={{
+                                stopColor: this.getColor(false),
+                                stopOpacity: "1"
+                            }} />
+                        </linearGradient>
+                    }
+                </defs>
+                <line
+                    className="Line"
+                    x1={this.state.x1}
+                    x2={this.state.x2}
+                    y1={this.state.y1}
+                    y2={this.state.y2}
+                    onClick={(e) => this.handleClick(e)}
+                    style={{"strokeWidth": this.state.width, markerEnd: this.state.directed ? "url(#markerArrow)" : ""}}
+                    stroke={this.state.x1 < this.state.x2 ? "url(#" + this.gradId + ")" : "url(#" + this.gradInvId + ")"}
+                />
+
+                <text
+                    x={this.state.textX}
+                    y={this.state.textY}
+                    onClick={(e) => this.handleClick(e)}
+                >{this.state.weight}</text>
+
             </svg>
         )
     }
