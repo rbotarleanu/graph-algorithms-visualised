@@ -87,26 +87,28 @@ export default class Graph extends Component {
 
         this.setGraphElements(newState, nodes, edges);
         this.setState(newState);
-        requestAnimationFrame(() => {
-            var filteredNodeRefs = {};
-            for (var nodeRef in this.nodeRefs) {
-                if (this.nodeRefs[nodeRef] === null) {
-                    continue;
-                }
-                this.nodeRefs[nodeRef].fill = this.getNodeColor(nodeRef);
-                filteredNodeRefs[nodeRef] = this.nodeRefs[nodeRef];
-            }
-            this.nodeRefs = filteredNodeRefs;
+        requestAnimationFrame(() => this.filterUnusedRefs());
+    }
 
-            var filteredEdgeRefs = {};
-            for (var edgeRef in this.edgeRefs) {
-                if (this.edgeRefs[edgeRef] === null) {
-                    continue;
-                }
-                filteredEdgeRefs[edgeRef] = this.edgeRefs[edgeRef];
+    filterUnusedRefs() {
+        var filteredNodeRefs = {};
+        for (var nodeRef in this.nodeRefs) {
+            if (this.nodeRefs[nodeRef] === null) {
+                continue;
             }
-            this.edgeRefs = filteredEdgeRefs;
-        }, 0);
+            this.nodeRefs[nodeRef].fill = this.getNodeColor(nodeRef);
+            filteredNodeRefs[nodeRef] = this.nodeRefs[nodeRef];
+        }
+        this.nodeRefs = filteredNodeRefs;
+
+        var filteredEdgeRefs = {};
+        for (var edgeRef in this.edgeRefs) {
+            if (this.edgeRefs[edgeRef] === null) {
+                continue;
+            }
+            filteredEdgeRefs[edgeRef] = this.edgeRefs[edgeRef];
+        }
+        this.edgeRefs = filteredEdgeRefs;
     }
 
     nodeChangeAttributes(nodeId, nodePosX, nodePosY, fill, distances) {
@@ -146,7 +148,7 @@ export default class Graph extends Component {
             edges[edgeId].weight = edgeWeight;
         }
 
-        if (edgeHighlight) {
+        if (edgeHighlight !== undefined) {
             edges[edgeId].highlight = edgeHighlight;
         }
 
@@ -269,6 +271,21 @@ export default class Graph extends Component {
 
         newWeight = Number.parseInt(newWeight);
         this.edgeChangeAttributes(this.state.selectedEdge, newWeight, undefined, undefined);
+        
+        requestAnimationFrame(() => {this.resetGraphAlgorithmVisuals()});
+    }
+
+    handleDeleteEdge() {
+        var newState = this.state;
+        let edgeId = this.state.selectedEdge;
+
+        delete newState.edges[edgeId];
+        newState.editorMode = false;
+        newState.selectedEdge = null;
+
+        this.setState(newState);
+        this.setGraphElements(newState, newState.nodes, newState.edges);
+        requestAnimationFrame(() => {this.filterUnusedRefs()});
     }
 
     render() {
@@ -324,7 +341,9 @@ export default class Graph extends Component {
                             position: "absolute",
                             top: this.state.editorPos.y,
                             left: this.state.editorPos.x,
-                            float: "left"
+                            float: "left",
+                            textAlign: "center",
+                            border: "1px solid blue"
                         }}>                    
                     <form onSubmit={e => {e.preventDefault();}}>
                         Weight: <input
@@ -332,6 +351,10 @@ export default class Graph extends Component {
                             type="text"
                             value={this.state.edges[this.state.selectedEdge].weight}
                             onChange={(val) => {this.handleEdgeWeightChange(val)}}/>
+                        <Button
+                            variant='outline-info'
+                            onClick={() => this.handleDeleteEdge()}
+                            >Delete</Button>
                     </form>
                 </div>}
             </div>

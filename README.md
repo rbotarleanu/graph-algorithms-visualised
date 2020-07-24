@@ -6,6 +6,7 @@
 
 # TODO
 - add ability to delete an edge and change its weight
+    - why aren't the highlights reset after changing a weight?
 - clean-up code: create constants from magic variables etc (e.g. colors)
 - write documentation
 - make a github.io page
