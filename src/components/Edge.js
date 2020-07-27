@@ -185,6 +185,17 @@ export default class Edge extends Component {
                     stroke={this.state.x1 < this.state.x2 ? "url(#" + this.gradId + ")" : "url(#" + this.gradInvId + ")"}
                 />
 
+                <line
+                    className="SelectionLine"
+                    x1={this.state.x1}
+                    x2={this.state.x2}
+                    y1={this.state.y1}
+                    y2={this.state.y2}
+                    onClick={(e) => this.handleClick(e)}
+                    style={{"strokeWidth": 20, opacity: 0}}
+                    stroke={this.state.x1 < this.state.x2 ? "url(#" + this.gradId + ")" : "url(#" + this.gradInvId + ")"}
+                />
+
                 <text
                     x={this.state.textX}
                     y={this.state.textY}
