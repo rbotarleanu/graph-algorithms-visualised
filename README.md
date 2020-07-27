@@ -11,6 +11,9 @@
 - make a github.io page
 - make it public 
 
+# Known Issues
+- sometimes edges disappear during Fruchterman-Reingold at the bottom of the screen
+
 # Algorithms
 
 ## Graph generation

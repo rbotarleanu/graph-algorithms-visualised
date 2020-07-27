@@ -62,10 +62,11 @@ export default class Node extends Component {
         for (var node in this.state.distances) {
             var values = this.state.distances[node];
 
-            if (!values) {
+            if (values === undefined) {
                 s += "";
                 continue;
             }
+            
 
             if (values['f'] !== undefined) {
                 let gScore = values['g'] === Infinity ? "∞" : values['g'];
@@ -83,11 +84,11 @@ export default class Node extends Component {
     }
 
     getDistancesOffset(distances) {
-        if (!distances) {
+        if (!distances || Object.keys(distances).length === 0) {
             return 0;
         }
 
-        if (!distances[this.nodeId]) {
+        if (distances[this.nodeId] === undefined) {
             return 0;
         }
 

@@ -343,16 +343,19 @@ export default class Graph extends Component {
                             left: this.state.editorPos.x,
                             float: "left",
                             textAlign: "center",
-                            border: "1px solid blue"
+                            border: "1px inset grey",
+                            zIndex: 10,
+                            backgroundColor: "rgb(233, 236, 245)",
+                            borderRadius: 5
                         }}>                    
                     <form onSubmit={e => {e.preventDefault();}}>
-                        Weight: <input
+                        <a>Weight</a> <input
                             className="edgeWeightInput"
                             type="text"
                             value={this.state.edges[this.state.selectedEdge].weight}
                             onChange={(val) => {this.handleEdgeWeightChange(val)}}/>
                         <Button
-                            variant='outline-info'
+                            variant='info'
                             onClick={() => this.handleDeleteEdge()}
                             >Delete</Button>
                     </form>

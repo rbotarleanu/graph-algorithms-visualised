@@ -15,11 +15,15 @@
     font-size: medium;
 }
 
-.btn.btn-outline-info {
+.btn.btn-info {
     width: 60px;
     height: 30px;
     padding: 0 0 0 0;
     vertical-align: top;
     text-align: top;
     padding-left: 0px;
+}
+
+a {
+    font-weight: bold;
 }
