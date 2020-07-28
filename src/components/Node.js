@@ -28,9 +28,13 @@ export default class Node extends Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.nodeId = nextProps.nodeId;
-        this.setState(this.buildState(nextProps));
+    componentDidUpdate(prevProps) {
+        if (prevProps.nodeId !== this.props.nodeId ||
+                prevProps.nodePosition !== this.props.nodePosition ||
+                prevProps.fill !== this.props.fill) {
+            this.nodeId = this.props.nodeId;
+            this.setState(this.buildState(this.props));
+        }
     }
 
     dragMove(e, ui) {
@@ -61,6 +65,7 @@ export default class Node extends Component {
         var s = "";
         for (var node in this.state.distances) {
             var values = this.state.distances[node];
+            var value = "";
 
             if (values === undefined) {
                 s += "";
@@ -74,7 +79,7 @@ export default class Node extends Component {
 
                 value = gScore + "(" + fScore + ")";
             } else {
-                var value = values === Infinity ? "∞" : values;
+                value = values === Infinity ? "∞" : values;
             }
 
             s += node + ": " + value + ", ";

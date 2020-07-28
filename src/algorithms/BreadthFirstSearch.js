@@ -1,4 +1,5 @@
 import NodeUpdate from './NodeUpdate.js';
+import { NodeColor } from '../utils/ColorConstants.js';
 
 
 export class BreadthFirstSearch {
@@ -42,7 +43,7 @@ export class BreadthFirstSearch {
             currentNode,
             nodes[currentNode].getX(),
             nodes[currentNode].getY(),
-            currentNodeStatus === 'open' ? "yellow" : "green"
+            currentNodeStatus === 'open' ? NodeColor.OPEN_NODE : NodeColor.CLOSED_NODE
         );
         nodeUpdates.push(nodeUpdate);
 
@@ -78,7 +79,7 @@ export class BreadthFirstSearch {
                 edgeNode2,
                 nodes[edgeNode2].getX(),
                 nodes[edgeNode2].getY(),
-                'yellow'
+                NodeColor.OPEN_NODE
             );
             nodeUpdates.push(nodeUpdate);
         }

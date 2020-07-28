@@ -24,6 +24,9 @@
     padding-left: 0px;
 }
 
-a {
+.WeightText {
     font-weight: bold;
+    font-size: medium;
+    font-style: normal;
+    display: inline;
 }

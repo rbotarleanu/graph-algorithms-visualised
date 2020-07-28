@@ -5,8 +5,6 @@
 - react-draggable to make the nodes move nicely; without this the performance is poor and dragging can be missed if cursor moves too fast
 
 # TODO
-- clean-up visuals: edge editor box, toolbar alignment
-- clean-up code: create constants from magic variables etc (e.g. colors)
 - write documentation
 - make a github.io page
 - make it public 

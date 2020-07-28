@@ -1,6 +1,7 @@
 import NodeUpdate from './NodeUpdate.js';
 import EdgeUpdate from './EdgeUpdate.js';
 import PriorityQueue from '../utils/PriorityQueue.js';
+import { NodeColor } from '../utils/ColorConstants.js';
 
 
 export class Dijkstra {
@@ -44,12 +45,12 @@ export class Dijkstra {
             }
             this.distances[this.sourceNode] = 0;
 
-        } else if (this.Q.length() == 0) {
+        } else if (this.Q.length() === 0) {
             return null;
         }
 
         let nodeInfo = this.Q.pop();
-        var nodeId = nodeInfo['key'];
+        nodeId = nodeInfo['key'];
         this.visited[nodeId] = true;
 
         this.crtStep += 1;
@@ -101,7 +102,7 @@ export class Dijkstra {
             nodeId,
             undefined,
             undefined,
-            'green',
+            NodeColor.CLOSED_NODE,
             undefined));
 
         nodeUpdates.push(new NodeUpdate(

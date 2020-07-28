@@ -51,13 +51,20 @@ export default class Edge extends Component {
             node1: props.node1,
             node2: props.node2,
             nodeRadius: props.nodeRadius,
-            highlight: props.highlight,
-            showMenu: false
+            highlight: props.highlight
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState(this.buildState(nextProps));
+    componentDidUpdate(prevProps) {
+        if (prevProps.highlight !== this.props.highlight ||
+                prevProps.x1 !== this.props.x1 ||
+                prevProps.y1 !== this.props.y1 ||
+                prevProps.x2 !== this.props.x2 ||
+                prevProps.y2 !== this.props.y2 ||
+                prevProps.weight !== this.props.weight ||
+                prevProps.directed !== this.props.directed) {
+            this.setState(this.buildState(this.props));
+        }
     }
 
     center(x1, y1, x2, y2) {

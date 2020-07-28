@@ -1,6 +1,7 @@
 import NodeUpdate from './NodeUpdate.js';
 import EdgeUpdate from './EdgeUpdate.js';
 import PriorityQueue from '../utils/PriorityQueue.js';
+import { NodeColor } from '../utils/ColorConstants.js';
 
 
 export class AStarSearch {
@@ -54,12 +55,12 @@ export class AStarSearch {
 
                 this.distances[nodeId] = {'f': this.heuristicValues[nodeId], 'g': Infinity};
             }
-        } else if (this.Q.length() == 0) {
+        } else if (this.Q.length() === 0) {
             return null;
         }
 
         let nodeInfo = this.Q.pop();
-        var nodeId = nodeInfo['key'];
+        nodeId = nodeInfo['key'];
         this.visited[nodeId] = true;
 
         if (nodeId === this.targetNode) {
@@ -119,7 +120,7 @@ export class AStarSearch {
             nodeId,
             undefined,
             undefined,
-            'green',
+            NodeColor.CLOSED_NODE,
             undefined));
 
         nodeUpdates.push(new NodeUpdate(
@@ -158,7 +159,7 @@ export class AStarSearch {
             }
         }
 
-        for (var u in nodes) {
+        for (u in nodes) {
             if (distances[u] === undefined) {
                 distances[u] = Infinity;
             }

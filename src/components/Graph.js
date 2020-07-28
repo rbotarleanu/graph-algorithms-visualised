@@ -5,6 +5,7 @@ import '../styles/Graph.css';
 import { RandomLayout } from '../algorithms/layout.js';
 import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { NodeColor } from '../utils/ColorConstants.js';
 
 
 export default class Graph extends Component {
@@ -34,11 +35,11 @@ export default class Graph extends Component {
     }
 
     getNodeColor(nodeId) {
-        var color = 'red';
+        var color = NodeColor.DEFAULT;
         if (this.state.sourceNode === nodeId) {
-            color = 'blue';
+            color = NodeColor.SOURCE_NODE;
         } else if (this.state.targetNode === nodeId) {
-            color = 'purple';
+            color = NodeColor.TARGET_NODE;
         }
         
         return color;
@@ -349,7 +350,7 @@ export default class Graph extends Component {
                             borderRadius: 5
                         }}>                    
                     <form onSubmit={e => {e.preventDefault();}}>
-                        <a>Weight</a> <input
+                        <p className="WeightText">Weight</p> <input
                             className="edgeWeightInput"
                             type="text"
                             value={this.state.edges[this.state.selectedEdge].weight}

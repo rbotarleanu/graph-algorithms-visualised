@@ -1,6 +1,6 @@
 import NodeUpdate from './NodeUpdate.js';
 import EdgeUpdate from './EdgeUpdate.js';
-import Edge from '../components/Edge.js';
+import { NodeColor } from '../utils/ColorConstants.js';
 
 
 export class FloydWarshall {
@@ -69,7 +69,6 @@ export class FloydWarshall {
         var nodeUpdates = [];
         var edgeUpdates = [];
         var relaxedEdges = [];
-        var updates = false;
 
         let relaxationNode = nodes[this.k].getId();
         let u = nodes[this.i].getId();
@@ -91,17 +90,15 @@ export class FloydWarshall {
                     edgeId,
                     undefined,
                     true));
-                
-                updates = true;
             }
         }
 
         for (var nodeId in nodes) {
-            var color = 'blue';
+            var color = NodeColor.SOURCE_NODE;
             if (nodeId === relaxationNode) {
-                color = 'green';
+                color = NodeColor.CLOSED_NODE;
             } else if (nodeId === u || nodeId === v) {
-                color = 'yellow';
+                color = NodeColor.OPEN_NODE;
             }
 
             nodeUpdates.push(new NodeUpdate(
@@ -112,8 +109,8 @@ export class FloydWarshall {
             ))
         }
 
-        if (this.k > 0 && this.i == 0 && this.j === 1) {
-            for (var edgeId in edges) {
+        if (this.k > 0 && this.i === 0 && this.j === 1) {
+            for (edgeId in edges) {
                 // reset highlights for edges not relaxed at this step
                 if (relaxedEdges.indexOf(edgeId) === -1) {
                     edgeUpdates.push(new EdgeUpdate(
