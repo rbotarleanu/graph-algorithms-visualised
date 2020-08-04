@@ -19,8 +19,6 @@ export default class Node extends Component {
                 x: props.posX,
                 y: props.posY
             },
-            x: props.posX,
-            y: props.posY,
             radius: props.radius,
             value: props.value,
             fill: props.fill,
@@ -30,8 +28,10 @@ export default class Node extends Component {
 
     componentDidUpdate(prevProps) {
         if (prevProps.nodeId !== this.props.nodeId ||
-                prevProps.nodePosition !== this.props.nodePosition ||
-                prevProps.fill !== this.props.fill) {
+                prevProps.posX !== this.props.posX ||
+                prevProps.posY !== this.props.posY ||
+                prevProps.fill !== this.props.fill ||
+                prevProps.distances !== this.props.distances)   {
             this.nodeId = this.props.nodeId;
             this.setState(this.buildState(this.props));
         }
