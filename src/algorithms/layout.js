@@ -126,7 +126,7 @@ export class RandomLayout {
 
 export class FruchtermanReingoldFD {
     
-    REPULSION_INCREASE = 50;
+    REPULSION_INCREASE = 10;
 
     constructor(x, y, width, height, iterations, scale) {
         /*
@@ -169,7 +169,7 @@ export class FruchtermanReingoldFD {
         var d = v1.distance(v2);
         var a = Math.pow(d.l2norm(), 2) / this.optimalDistance(numNodes);
 
-        return d.normalize().scalarMul(a * this.scale);
+        return d.normalize().scalarMul(a * this.scale / this.REPULSION_INCREASE);
     }
 
     repulsion(v1, v2, numNodes) {

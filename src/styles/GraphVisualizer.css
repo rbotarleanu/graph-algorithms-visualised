@@ -23,3 +23,7 @@
     /* clear: none; */
     padding: 0px 20px 0px 2px;
 }
+
+div.LabelChildDiv {
+    margin-top: 2%;
+}

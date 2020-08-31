@@ -26,6 +26,12 @@ export default class GraphVisualizer extends Component {
         'edge': 3
     };
 
+    SLIDERS = {
+        ANIMATION: 'Animation delay',
+        SPARSITY: 'Sparsity',
+        NODES: 'Nodes'
+    };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -170,13 +176,13 @@ export default class GraphVisualizer extends Component {
         var sparsitySliderProps = this.state.sparsitySliderProps;
         var animationSpeedSliderProps = this.state.animationSpeedSliderProps;
         switch (property) {
-            case 'Nodes':
+            case this.SLIDERS.NODES:
                 nodeSliderProps.currentValue = newValue;
                 break;
-            case 'Sparsity':
+            case this.SLIDERS.SPARSITY:
                 sparsitySliderProps.currentValue = newValue;
                 break;
-            case 'Animation speed':
+            case this.SLIDERS.ANIMATION:
                 animationSpeedSliderProps.currentValue = newValue;
                 break;
             default:
@@ -334,19 +340,19 @@ export default class GraphVisualizer extends Component {
             <div className="visualizer" id="visualizer">
                 <div className="Toolbar">
                     <Slider
-                        label="Nodes"
+                        label={this.SLIDERS.NODES}
                         sliderProps={this.state.nodeSliderProps}
                         um=""
                         notifyGraphRedraw={this.sliderUpdate}
                     />
                     <Slider
-                        label="Sparsity"
+                        label={this.SLIDERS.SPARSITY}
                         sliderProps={this.state.sparsitySliderProps}
                         um="%"
                         notifyGraphRedraw={this.sliderUpdate}
                     />
                     <Slider
-                        label="Animation speed"
+                        label={this.SLIDERS.ANIMATION}
                         sliderProps={this.state.animationSpeedSliderProps}
                         um="ms"
                         disabled={this.state.inEditorMode}
