@@ -22,6 +22,8 @@
 
 # Introduction
 
+![Intro Shot](docs/introshot.gif)
+
 The "Graph Algorithms Visualized" project is aimed to offer a more intuiitive understanding of how graph algorithms work through an editable graphical interface that lets you run select algorithms on randomly generated, customizable graphs.
 
 Some core features include:
