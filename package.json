@@ -15,7 +15,7 @@
     "react-draggable": "^4.4.2",
     "react-editable-svg-label": "^2.0.3",
     "react-portal": "^4.2.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
